@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is the main repo for the __Whitefish Skijoring Full-Stack Registration Platform__
+Below is the Next.js startup sequence
+
+#Documentation
+(__coming soon__)
 
 ## Getting Started
 
