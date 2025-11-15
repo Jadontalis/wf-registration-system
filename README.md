@@ -1,4 +1,4 @@
-This is the main repo for the __Whitefish Skijoring Full-Stack Registration Platform__
+# This is the main repo for the __Whitefish Skijoring Full-Stack Registration Platform__
 Below is the Next.js startup sequence
 
 #Documentation
