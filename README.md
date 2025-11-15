@@ -1,4 +1,5 @@
-# This is the main repo for the __Whitefish Skijoring Full-Stack Registration Platform__
+#__Whitefish Skijoring Full-Stack Registration Platform__
+This is the main repo for the both client side applications. This being the admin dashboard to manage events, teams, registration entries, divisions, and more. The other being the main registration website where users can create an account/ sign in, register their teams in each division, and submit their registration cart for admin approval. From there this will populate on the admin side for approval of the account, correct errors in registration, export data to .csv files for board members, run sheets, as well as other CRUD operations. 
 
 
 #Documentation
