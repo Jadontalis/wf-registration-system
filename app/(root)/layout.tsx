@@ -1,6 +1,7 @@
 import { Main } from 'next/document'
 import type { ReactNode } from 'react'
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Image from 'next/image';
 
 const Layout = ({ children }: { children: ReactNode }) => {
@@ -15,9 +16,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 priority
             />
         </div>
-        <div className="mx-auto max-w-7xl relative z-10">
+        <div className="mx-auto max-w-7xl relative z-10 flex flex-col min-h-screen">
             <Header />
-            <div className="mt-20 pb-20">{children}</div>
+            <div className="mt-20 pb-20 flex-1">{children}</div>
+            <Footer />
         </div>
     </main>
   );

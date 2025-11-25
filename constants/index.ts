@@ -64,7 +64,8 @@ export const sampleEvents = [
         description: "Join us for the 20th Anniversary of the Whitefish Skijoring Event!",
         color: "#84abcc",
         cover: "/images/2025_WFS.jpg",
-        summary: "Be one with the action for this years annual festival. Register now for an unforgettable event filled with excitement and fun!"
+        summary: "Be one with the action for this years annual festival. Register now for an unforgettable event filled with excitement and fun!",
+        available_events: 100
     },
 
 ];

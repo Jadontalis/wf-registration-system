@@ -1,4 +1,4 @@
-interface Event {
+interface EventData {
     id: number;
     title: string;
     date: number | string;

@@ -1,17 +1,48 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import RegistrationOverview from "@/components/RegistrationOverview";
-import RegistrationPortalViewer from "@/components/RegistrationPortalViewer";
 import { sampleEvents } from "@/constants";
 
-const Home = () =><>
-  <RegistrationOverview {... sampleEvents[0]} />
+interface RegistrationPortalViewerProps {
+  title: string;
+  events: Array<{
+    id: number;
+    title: string;
+    date: string;
+    location: string;
+    description: string;
+    color: string;
+    cover: string;
+    summary: string;
+    available_events: number;
+  }>;
+  containerClassName?: string;
+}
 
-  <RegistrationPortalViewer 
-      title="Event Registration Portal"
-      events={sampleEvents}
-      containerClassName="mt-28"
-  />
+const RegistrationPortalViewer = ({ title, events, containerClassName }: RegistrationPortalViewerProps) => {
+  return (
+    <div className={containerClassName}>
+      <h2>{title}</h2>
+      <div>
+        {events.map((event) => (
+          <div key={event.id}>
+            <h3>{event.title}</h3>
+            <p>{event.date}</p>
+            <p>{event.location}</p>
+            <p>{event.description}</p>
+            <p>{event.color}</p>
+            <p>{event.cover}</p>
+            <p>{event.summary}</p>
+            <p>{event.available_events}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Home = () =><>
+  <RegistrationOverview {...sampleEvents[0]} />
 </>
 
 export default Home;
