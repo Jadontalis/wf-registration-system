@@ -9,7 +9,7 @@ const Page = () => (
         schema={signupSchema}
         defaultValues={{ full_name: "", email: "", password: "" }}
 
-        onSubmit={async () => ({ sucess: true })}
+        onSubmit={async () => ({ success: true })}
     />
 )
 

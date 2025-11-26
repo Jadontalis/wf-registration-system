@@ -10,7 +10,7 @@ const Page = () => (
         defaultValues={{ email: "", password: "" }}
 
         onSubmit={async (data) => {
-            return { sucess: true };
+            return { success: true };
         }}
     />
 )
