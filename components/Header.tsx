@@ -18,7 +18,7 @@ const Header = () => {
     {/* Desktop Navigation */}
     <ul className="hidden md:flex flex-row items-center gap-8">
         <li>
-            <Link href="/home" className={cn(
+            <Link href="/" className={cn(
                 'text-lg md:text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
                 pathname === '/home' && 'underline underline-offset-4'
             )}>Home</Link>
@@ -46,13 +46,12 @@ const Header = () => {
             <ul className="flex flex-col items-center gap-6 py-8">
                 <li>
                     <Link 
-                        href="/home" 
+                        href="/" 
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
                             'text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
                             pathname === '/home' && 'underline underline-offset-4'
-                        )}
-                    >
+                        )}>
                         Home
                     </Link>
                 </li>
