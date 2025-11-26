@@ -68,7 +68,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                 <FormLabel className="text-white">Email</FormLabel>
                                 <FormControl>
                                     <Input 
-                                        placeholder="m@example.com" 
+                                        placeholder="john-doe@example.com" 
                                         {...field} 
                                         className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
                                     />
@@ -97,7 +97,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                         )}
                     />
 
-                    <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 font-semibold">
+                    <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 font-semibold cursor-pointer">
                         {isSignIn ? "Sign In" : "Sign Up"}
                     </Button>
                 </form>
