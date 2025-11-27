@@ -2,16 +2,28 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn, getInitials } from '@/lib/utils';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Session } from 'next-auth';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { signOutUser } from "@/lib/actions/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-const Header = () => {
+const Header = ({ session }: {session: Session}) => {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
 
   return <header className="my-10 w-full flex justify-between items-center gap-5 px-4">
-    <Link href="/">
+    <Link href="/" className="hover:opacity-80 active:opacity-80 transition-opacity">
         <Image src="/icons/logo.png" alt="logo" width={90} height={90} />
     </Link>
     
@@ -28,6 +40,34 @@ const Header = () => {
                 'text-lg md:text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
                 pathname === '/registration-cart' && 'underline underline-offset-4'
             )}>Registration Cart</Link>
+        </li>
+        <li>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <div className="cursor-pointer hover:opacity-80 active:opacity-80 transition-opacity">
+                        <Avatar>
+                            <AvatarFallback className='bg-white text-black'>{ getInitials(session?.user?.name || 'PF')}</AvatarFallback>
+                        </Avatar>
+                    </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-[#0a0f1a] border-white/10 text-white">
+                    <DropdownMenuItem className="cursor-pointer hover:bg-white/10 focus:bg-white/10 focus:text-white">
+                        <Link href="/account-settings" className="w-full">Account Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer hover:bg-white/10 focus:bg-white/10 focus:text-white">
+                        <Link href="/billing" className="w-full">Billing</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        className="cursor-pointer hover:bg-white/10 focus:bg-white/10 text-white focus:text-white"
+                        onClick={async () => await signOutUser()}
+                    >
+                        <div className="flex items-center gap-2 w-full">
+                            <LogOut size={16} />
+                            Logout
+                        </div>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </li>
     </ul>
 
@@ -66,6 +106,55 @@ const Header = () => {
                     >
                         Registration Cart
                     </Link>
+
+                    <li>
+                        <div className="flex flex-col items-center w-full">
+                            <button 
+                                onClick={() => setIsMobileProfileOpen(!isMobileProfileOpen)}
+                                className={cn(
+                                    'text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors flex items-center gap-2',
+                                    isMobileProfileOpen && 'text-gray-200'
+                                )}
+                            >
+                                Profile
+                                {isMobileProfileOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                            </button>
+                            
+                            {isMobileProfileOpen && (
+                                <ul className="flex flex-col items-center gap-4 mt-4 w-full bg-white/5 py-4 rounded-lg animate-in slide-in-from-top-2 fade-in duration-200">
+                                    <li>
+                                        <Link 
+                                            href="/account-settings"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="text-lg text-gray-300 hover:text-white transition-colors"
+                                        >
+                                            Account Settings
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            href="/billing"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="text-lg text-gray-300 hover:text-white transition-colors"
+                                        >
+                                            Billing
+                                        </Link>
+                                    </li>
+                                </ul>
+                            )}
+                        </div>
+                    </li>
+                </li>
+                
+                <li className="mt-4 w-full px-4">
+                    <Button 
+                        onClick={async () => await signOutUser()}
+                        variant="destructive" 
+                        className="w-full flex items-center justify-center gap-2"
+                    >
+                        <LogOut size={20} />
+                        Logout
+                    </Button>
                 </li>
             </ul>
         </div>

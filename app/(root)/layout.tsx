@@ -1,10 +1,17 @@
-import { Main } from 'next/document'
 import type { ReactNode } from 'react'
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from 'next/image';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth();
+  
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   return (  
     <main className='root-container relative'>
         <div className="fixed inset-0 -z-10">
@@ -17,8 +24,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
         </div>
         <div className="mx-auto max-w-7xl relative z-10 flex flex-col min-h-screen">
-            <Header />
-            <div className="mt-20 pb-20 flex-1">{children}</div>
+            <Header session = { session } />
+              <div className="mt-20 pb-20 flex-1">{children}</div>
             <Footer />
         </div>
     </main>

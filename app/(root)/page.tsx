@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import RegistrationOverview from "@/components/RegistrationOverview";
 import { sampleEvents } from "@/constants";
+import { db } from "@/database/drizzle";
+import { usersTable } from "@/database/schema";
 
 interface RegistrationPortalViewerProps {
   title: string;
@@ -41,8 +43,12 @@ const RegistrationPortalViewer = ({ title, events, containerClassName }: Registr
   );
 };
 
-const Home = () =><>
-  <RegistrationOverview {...sampleEvents[0]} />
-</>
+const Home = async () => {
+  return (
+    <>
+      <RegistrationOverview {...sampleEvents[0]} />  
+    </>
+  )
+}
 
 export default Home;

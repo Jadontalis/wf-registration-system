@@ -21,8 +21,8 @@ const RegistrationOverview = ({
 
             <h2 className="text-xl md:text-xl text-white leading-relaxed">
                 When registration opens, use the clickthrough below and add your order to your cart.
-                When you're finished, submit your registration cart for us to approve. 
-                Once that's done, you'll receive a confirmation email with payment instructions.
+                When you&apos;re finished, submit your registration cart for us to approve. 
+                Once that&apos;s done, you&apos;ll receive a confirmation email with payment instructions.
             </h2>
 
             {/* Event Details */}

@@ -9,3 +9,10 @@ interface EventData {
     summary: string;
     available_events: number;
 }
+
+interface authCredentials {
+    full_name: string;
+    email: string;
+    password: string;
+    bios: string;
+}

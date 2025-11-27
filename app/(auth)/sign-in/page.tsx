@@ -1,6 +1,7 @@
 "use client";
 
 import AuthForm from '@/components/AuthForm';
+import { signInWithCredentials } from '@/lib/actions/auth';
 import { signinSchema } from '@/lib/validations';
 
 const Page = () => (
@@ -8,10 +9,7 @@ const Page = () => (
         type="SIGN_IN"
         schema={signinSchema}
         defaultValues={{ email: "", password: "" }}
-
-        onSubmit={async (data) => {
-            return { success: true };
-        }}
+        onSubmit={signInWithCredentials}
     />
 )
 

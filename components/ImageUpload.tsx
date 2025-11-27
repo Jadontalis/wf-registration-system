@@ -1,7 +1,7 @@
 "use client";
 import { IKImage, ImageKitProvider, IKUpload } from 'imagekitio-next';
 import config from '@/lib/config';
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const authenticator = async () => {
     try 
@@ -18,9 +18,12 @@ const authenticator = async () => {
         
         return { signature, token, expire };
     } 
-        catch (error: any) 
+        catch (error) 
     {
-        throw new Error(`Authentication request failed :( : ${error.message})`);
+        if (error instanceof Error) {
+            throw new Error(`Authentication request failed :( : ${error.message})`);
+        }
+        throw new Error(`Authentication request failed :( : ${String(error)})`);
     }
 }
 
@@ -35,13 +38,9 @@ const ImageUpload = () =>
     return <ImageKitProvider publicKey={config.env.imagekit.publicKey!} urlEndpoint={config.env.imagekit.urlEndpoint!} authenticator={authenticator}>
         <IKUpload className='hidden' ref={ikUploadRef} onError={onError} onSuccess={onSuccess} />
         
-        // Implementation of adding upload image button and displaying uploaded image to user, if need be
+        {/* Implementation of adding upload image button and displaying uploaded image to user, if need be */}
         
     </ImageKitProvider>
 }
 
 export default ImageUpload
-function useState<T>(arg0: null): [any, any] {
-    throw new Error('Function not implemented.');
-}
-
