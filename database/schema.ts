@@ -24,11 +24,12 @@
 
 //<-------------------------------------------------------------->//
 
-import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date } from 'drizzle-orm/pg-core';
+import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date, boolean } from 'drizzle-orm/pg-core';
 
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
+export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER']);
 
 //Registration cart status
 export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED']);
@@ -39,8 +40,12 @@ export const usersTable = pgTable('users_table',
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
   full_name: varchar('full_name', {length: 255}).notNull(),
   email: text('email').notNull().unique(),
-  bios: varchar('bios', {length: 255} ).notNull().unique(),
+  phone: varchar('phone', {length: 20}).notNull().default(''),
+  bios: text('bios').notNull(),
   password: text('password').notNull(),
+  waiver_signed: boolean('waiver_signed').notNull().default(false),
+  waiver_signed_at: timestamp('waiver_signed_at', { withTimezone: true }),
+  competitor_type: COMPETITOR_TYPE_ENUM('competitor_type').notNull().default('RIDER'),
   status: STATUS_ENUM('status').notNull().default('PENDING'),
   role: ROLE_ENUM('role').notNull().default('USER'),
   last_activity_date: date('last_activity_date').notNull().defaultNow(),

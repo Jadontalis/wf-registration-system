@@ -6,6 +6,14 @@ import { z, ZodType } from "zod";
 import Link from "next/link";
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -103,6 +111,28 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                         )}
                     />
 
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"phone" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Phone Number</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="tel"
+                                            autoComplete="tel"
+                                            placeholder="(555) 555-5555" 
+                                            {...field} 
+                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
                     <FormField
                         control={form.control}
                         name={"password" as Path<T>}
@@ -128,14 +158,69 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                             name={"bios" as Path<T>}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-white">Bio</FormLabel>
+                                    <FormLabel className="text-white">Create a Bio</FormLabel>
                                     <FormControl>
                                         <Textarea 
-                                            placeholder="Please create a bio for our announcer" 
+                                            placeholder="Tell us more about how you got into skijoring and we'll give this to the announcer!" 
                                             {...field} 
                                             className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20 min-h-[100px]"
+                                            maxLength={1000}
                                         />
                                     </FormControl>
+                                    <FormDescription className="text-white/50 text-xs">
+                                        Max 1000 characters
+                                    </FormDescription>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"competitor_type" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">I am a...</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className="bg-transparent border-white/20 text-white focus:ring-white/20">
+                                                <SelectValue placeholder="Select your role" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="bg-black border-white/20 text-white">
+                                            <SelectItem value="RIDER" className="focus:bg-white/10 focus:text-white">Rider</SelectItem>
+                                            <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white">Skier</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"waiver_signed" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-white/20 p-4">
+                                    <FormControl>
+                                        <Checkbox
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                            className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-black"
+                                        />
+                                    </FormControl>
+                                    <div className="space-y-1 leading-none">
+                                        <FormLabel className="text-white">
+                                            I agree to the waiver and terms of service
+                                        </FormLabel>
+                                        <FormDescription className="text-white/50">
+                                            You must agree with the above to create an account. To read waiver <Link href="/wfs-waiver" className="underline hover:text-white">click here</Link>.
+                                        </FormDescription>
+                                    </div>
                                     <FormMessage className="text-red-400" />
                                 </FormItem>
                             )}

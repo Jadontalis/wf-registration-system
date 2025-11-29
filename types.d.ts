@@ -13,6 +13,9 @@ interface EventData {
 interface authCredentials {
     full_name: string;
     email: string;
+    phone: string;
     password: string;
     bios: string;
+    waiver_signed: boolean;
+    competitor_type: "RIDER" | "SKIER";
 }

@@ -7,9 +7,9 @@ import { useState } from 'react';
 import { Menu, X, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { signOutUser } from "@/lib/actions/auth";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,14 +31,14 @@ const Header = ({ session }: {session: Session}) => {
     <ul className="hidden md:flex flex-row items-center gap-8">
         <li>
             <Link href="/" className={cn(
-                'text-lg md:text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
-                pathname === '/home' && 'underline underline-offset-4'
+                'text-lg md:text-xl cursor-pointer capitalize font-semibold',
+                pathname === '/' ? 'text-white' : 'text-white/70 hover:text-white'
             )}>Home</Link>
         </li>
         <li>
             <Link href="/registration-cart" className={cn(
-                'text-lg md:text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
-                pathname === '/registration-cart' && 'underline underline-offset-4'
+                'text-lg md:text-xl cursor-pointer capitalize font-semibold',
+                pathname === '/registration-cart' ? 'text-white' : 'text-white/70 hover:text-white'
             )}>Registration Cart</Link>
         </li>
         <li>
@@ -89,8 +89,8 @@ const Header = ({ session }: {session: Session}) => {
                         href="/" 
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
-                            'text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
-                            pathname === '/home' && 'underline underline-offset-4'
+                            'text-xl cursor-pointer capitalize font-semibold',
+                            pathname === '/' ? 'text-white' : 'text-white/70 hover:text-white'
                         )}>
                         Home
                     </Link>
@@ -100,8 +100,8 @@ const Header = ({ session }: {session: Session}) => {
                         href="/registration-cart"
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
-                            'text-xl cursor-pointer capitalize text-white font-semibold hover:text-gray-200 transition-colors',
-                            pathname === '/registration-cart' && 'underline underline-offset-4'
+                            'text-xl cursor-pointer capitalize font-semibold',
+                            pathname === '/registration-cart' ? 'text-white' : 'text-white/70 hover:text-white'
                         )}
                     >
                         Registration Cart

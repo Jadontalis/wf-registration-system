@@ -132,7 +132,7 @@
 
 .root-container {
   @apply flex flex-col items-center min-h-screen;
-  background: radial-gradient(circle at 20% 50%, #1a2942 0%, transparent 50%),
+  background: radial-gradient(circle at 20% 50%, #111825 0%, transparent 50%),
               radial-gradient(circle at 80% 80%, #0e1525 0%, transparent 50%),
               radial-gradient(circle at 40% 80%, #1c2640 0%, transparent 50%),
               radial-gradient(circle at 80% 20%, #0d121f 0%, transparent 50%),

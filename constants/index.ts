@@ -43,7 +43,7 @@ export const adminSideBarLinks = [
 ];
 
 export const FIELD_NAMES = {
-  fullName: "Full name",
+  fullName: "Full Name",
   email: "Email",
   password: "Password",
 };
@@ -59,12 +59,12 @@ export const sampleEvents = [
     {
         id: 1,
         title: "Whitefish Skijoring Event 2026",
-        date: "2026-2-14",
+        date: "2-14-2026",
         location: "Whitefish, MT",
         description: "Join us for the 20th Anniversary of the Whitefish Skijoring Event!",
         color: "#84abcc",
         cover: "/images/2025_WFS.jpg",
-        summary: "Be one with the action for this years annual festival. Register now for an unforgettable event filled with excitement and fun!",
+        summary: "Be one with the action and register now for an unforgettable event!",
         available_events: 100
     },
 

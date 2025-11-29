@@ -30,7 +30,7 @@ export const signInWithCredentials = async (params: Pick<authCredentials, 'email
 }
 
 export const signUp = async (params: authCredentials) => {
-    const {full_name, email, password, bios} = params;
+    const {full_name, email, phone, password, bios, waiver_signed, competitor_type} = params;
 
     const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
 
@@ -46,14 +46,21 @@ export const signUp = async (params: authCredentials) => {
         await db.insert(usersTable).values({
             full_name,
             email,
+            phone,
             password: hashedPassword,
             bios,
+            waiver_signed,
+            waiver_signed_at: waiver_signed ? new Date() : null,
+            competitor_type,
         });
 
        await signInWithCredentials({ email, password });
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.log("Error during user sign up:", error);
+        if (error.code === '23505') { // Unique constraint violation
+            return { success: false, error: "User with this email already exists" };
+        }
         return { success: false, error: "Error during sign up" };
     }
 

@@ -13,7 +13,7 @@ const RegistrationOverview = ({
     available_events
 }: EventData) => 
 {
-    return <section className='w-full px-6 py-8'>
+    return <section className='w-full px-6 py-8 flex flex-col items-center justify-center'>
         <div className="flex flex-1 flex-col gap-6 max-w-4xl items-center text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
                 Welcome to the Whitefish Skijoring Registration Portal!

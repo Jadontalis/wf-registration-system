@@ -23,7 +23,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
                 priority
             />
         </div>
-        <div className="mx-auto max-w-7xl relative z-10 flex flex-col min-h-screen">
+        <div className="w-full mx-auto max-w-7xl px-4 relative z-10 flex flex-col min-h-screen">
             <Header session = { session } />
               <div className="mt-20 pb-20 flex-1">{children}</div>
             <Footer />
