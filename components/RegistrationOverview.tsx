@@ -1,6 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
+import RegistrationButton from './RegistrationButton'
+
+interface RegistrationOverviewProps extends EventData {
+    userId?: string;
+}
 
 const RegistrationOverview = ({
     id,
@@ -10,8 +14,9 @@ const RegistrationOverview = ({
     description,
     cover,
     summary,
-    available_events
-}: EventData) => 
+    available_events,
+    userId
+}: RegistrationOverviewProps) => 
 {
     return <section className='w-full px-6 py-8 flex flex-col items-center justify-center'>
         <div className="flex flex-1 flex-col gap-6 max-w-4xl items-center text-center">
@@ -20,9 +25,8 @@ const RegistrationOverview = ({
             </h1>
 
             <h2 className="text-xl md:text-xl text-white leading-relaxed">
-                When registration opens, use the clickthrough below and add your order to your cart.
-                When you&apos;re finished, submit your registration cart for us to approve. 
-                Once that&apos;s done, you&apos;ll receive a confirmation email with payment instructions.
+                When registration opens, use the button below to reserve your slot.
+                You will have 10 minutes to complete your registration.
             </h2>
 
             {/* Event Details */}
@@ -48,12 +52,7 @@ const RegistrationOverview = ({
                 </div>
                 {summary && <p className="text-white italic">{summary}</p>}
                 
-                <Button asChild className="mt-4 w-1/2 md:w-64 bg-white text-primary hover:bg-gray-100 font-semibold text-lg py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
-                    <a href={`/registration/${id}`} className="flex items-center justify-center gap-2">
-                        <Image src="/icons/logo-light.jpg" alt="Logo" width={24} height={24} />
-                        <span>Register Now</span>
-                    </a>
-                </Button>
+                <RegistrationButton userId={userId} />
             </div>
         </div>
     </section>

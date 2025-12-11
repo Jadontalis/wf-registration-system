@@ -4,11 +4,13 @@ import { db } from "@/database/drizzle"
 import { usersTable } from "@/database/schema"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs"
+import config from "@/lib/config"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
   },
+  secret: config.env.authSecret,
 
 
   providers: [CredentialsProvider({ 

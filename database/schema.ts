@@ -29,10 +29,12 @@ import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date,
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
-export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER']);
+export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'BOTH']);
 
 //Registration cart status
 export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED']);
+export const SLOT_STATUS_ENUM = pgEnum('slot_status_enum', ['RESERVED', 'COMPLETED', 'EXPIRED', 'RELEASED']);
+export const WAITLIST_STATUS_ENUM = pgEnum('waitlist_status_enum', ['PENDING', 'NOTIFIED', 'EXPIRED', 'COMPLETED']);
 
 
 export const usersTable = pgTable('users_table', 
@@ -52,14 +54,39 @@ export const usersTable = pgTable('users_table',
   created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const registrationSlotsTable = pgTable('registration_slots_table', {
+  id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid('user_id').references(() => usersTable.id).notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  status: SLOT_STATUS_ENUM('status').notNull().default('RESERVED'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const waitlistTable = pgTable('waitlist_table', {
+  id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid('user_id').references(() => usersTable.id).notNull(),
+  status: WAITLIST_STATUS_ENUM('status').notNull().default('PENDING'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const registrationCartTable = pgTable('registration_cart_table', 
 {
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid('user_id').references(() => usersTable.id).notNull(),
+  status: REG_CART_STATUS_ENUM('status').notNull().default('PENDING'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const registrationTable = pgTable('registration_table',
+export const teamsTable = pgTable('teams_table',
 {
     id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+    cartId: uuid('cart_id').references(() => registrationCartTable.id).notNull(),
+    riderId: uuid('rider_id').references(() => usersTable.id).notNull(),
+    skierId: uuid('skier_id').references(() => usersTable.id).notNull(),
+    horseName: varchar('horse_name', { length: 255 }).notNull(),
+    status: STATUS_ENUM('status').notNull().default('PENDING'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type InsertUser = typeof usersTable.$inferInsert;
