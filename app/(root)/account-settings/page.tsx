@@ -30,6 +30,8 @@ const AccountSettingsPage = async () => {
             full_name: userData.full_name,
             email: userData.email,
             phone: userData.phone,
+            address: userData.address,
+            hometown: userData.hometown,
             bios: userData.bios,
             competitor_type: userData.competitor_type,
           }}

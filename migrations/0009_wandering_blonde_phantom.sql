@@ -1,0 +1,1 @@
+ALTER TABLE "teams_table" ADD COLUMN "team_name" varchar(255);

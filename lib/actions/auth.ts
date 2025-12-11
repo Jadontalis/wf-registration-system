@@ -30,7 +30,7 @@ export const signInWithCredentials = async (params: Pick<authCredentials, 'email
 }
 
 export const signUp = async (params: authCredentials) => {
-    const {full_name, email, phone, password, bios, waiver_signed, competitor_type} = params;
+    const {full_name, email, phone, address, hometown, password, bios, waiver_signed, competitor_type} = params;
 
     const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
 
@@ -47,8 +47,10 @@ export const signUp = async (params: authCredentials) => {
             full_name,
             email,
             phone,
+            address,
+            hometown,
             password: hashedPassword,
-            bios,
+            bios: bios || '',
             waiver_signed,
             waiver_signed_at: waiver_signed ? new Date() : null,
             competitor_type,

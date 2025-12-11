@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/database/drizzle';
-import { registrationSlotsTable, waitlistTable, teamsTable, registrationCartTable } from '@/database/schema';
+import { registrationSlotsTable, waitlistTable, teamsTable, registrationCartTable, usersTable } from '@/database/schema';
 import { eq, and, gt, count, desc } from 'drizzle-orm';
 
 const MAX_SLOTS = 50; // Configurable
@@ -140,12 +140,36 @@ export async function releaseSlot(userId: string) {
     }
 }
 
-export async function submitRegistrationCart(userId: string, teams: { riderId: string; skierId: string; horseName: string }[]) {
+export async function submitRegistrationCart(
+  userId: string, 
+  teams: { riderId: string; skierId: string; horseName?: string; teamName?: string }[],
+  additionalInfo?: {
+    guardianName?: string;
+    guardianPhone?: string;
+    division?: 'NOVICE' | 'SPORT' | 'OPEN';
+    waiverAgreed: boolean;
+    horseOwner?: string;
+    horses?: { name: string; bio: string }[];
+  }
+) {
   try {
     // 1. Verify slot is still valid
     const slotStatus = await checkSlotStatus(userId);
     if (slotStatus.status !== 'ACTIVE') {
       return { success: false, error: 'Slot expired or invalid' };
+    }
+
+    // Update user info if provided
+    if (additionalInfo) {
+        await db.update(usersTable).set({
+            waiver_signed: additionalInfo.waiverAgreed,
+            waiver_signed_at: additionalInfo.waiverAgreed ? new Date() : undefined,
+            guardian_name: additionalInfo.guardianName,
+            guardian_phone: additionalInfo.guardianPhone,
+            division: additionalInfo.division,
+            horse_owner: additionalInfo.horseOwner,
+            horses: additionalInfo.horses,
+        }).where(eq(usersTable.id, userId));
     }
 
     // 2. Create cart
@@ -162,12 +186,36 @@ export async function submitRegistrationCart(userId: string, teams: { riderId: s
         cartId,
         riderId: team.riderId,
         skierId: team.skierId,
-        horseName: team.horseName,
+        horseName: team.horseName || '', // Handle optional horseName
+        teamName: team.teamName,
         status: 'PENDING',
       });
     }
 
-    // 4. Mark slot as COMPLETED
+    // 4. Mark slot as COMPLETED - MOVED TO finalizeRegistration
+    // await db.update(registrationSlotsTable)
+    //   .set({ status: 'COMPLETED' })
+    //   .where(and(
+    //     eq(registrationSlotsTable.userId, userId),
+    //     eq(registrationSlotsTable.status, 'RESERVED')
+    //   ));
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error submitting cart:', error);
+    return { success: false, error: 'Failed to submit registration' };
+  }
+}
+
+export async function finalizeRegistration(userId: string) {
+  try {
+    // 1. Verify slot is still valid
+    const slotStatus = await checkSlotStatus(userId);
+    if (slotStatus.status !== 'ACTIVE') {
+      return { success: false, error: 'Slot expired or invalid' };
+    }
+
+    // 2. Mark slot as COMPLETED
     await db.update(registrationSlotsTable)
       .set({ status: 'COMPLETED' })
       .where(and(
@@ -177,7 +225,7 @@ export async function submitRegistrationCart(userId: string, teams: { riderId: s
 
     return { success: true };
   } catch (error) {
-    console.error('Error submitting cart:', error);
-    return { success: false, error: 'Failed to submit registration' };
+    console.error('Error finalizing registration:', error);
+    return { success: false, error: 'Failed to finalize registration' };
   }
 }

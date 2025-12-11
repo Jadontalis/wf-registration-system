@@ -33,7 +33,9 @@ interface AccountSettingsFormProps {
     full_name: string;
     email: string;
     phone: string;
-    bios: string;
+    address: string;
+    hometown?: string | null;
+    bios?: string | null;
     competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH';
   };
 }
@@ -44,7 +46,11 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
 
   const form = useForm<z.infer<typeof accountUpdateSchema>>({
     resolver: zodResolver(accountUpdateSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      hometown: initialData.hometown ?? undefined,
+      bios: initialData.bios ?? undefined,
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof accountUpdateSchema>) => {
@@ -123,6 +129,43 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
 
         <FormField
           control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-white">Address</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="123 Main St, City, State, Zip" 
+                  {...field} 
+                  className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                />
+              </FormControl>
+              <FormMessage className="text-red-400" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="hometown"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-white">Hometown (Optional)</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="City, State" 
+                  {...field} 
+                  value={field.value || ''}
+                  className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                />
+              </FormControl>
+              <FormMessage className="text-red-400" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="competitor_type"
           render={({ field }) => (
             <FormItem>
@@ -150,11 +193,12 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
           name="bios"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Bio</FormLabel>
+              <FormLabel className="text-white">Bio (Optional)</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Tell us about yourself..." 
                   {...field} 
+                  value={field.value || ''}
                   className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20 min-h-[100px]"
                 />
               </FormControl>

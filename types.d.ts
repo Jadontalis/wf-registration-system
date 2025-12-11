@@ -14,8 +14,10 @@ interface authCredentials {
     full_name: string;
     email: string;
     phone: string;
+    address: string;
+    hometown?: string;
     password: string;
-    bios: string;
+    bios?: string;
     waiver_signed: boolean;
-    competitor_type: "RIDER" | "SKIER";
+    competitor_type: "RIDER" | "SKIER" | "SNOWBOARDER" | "BOTH";
 }

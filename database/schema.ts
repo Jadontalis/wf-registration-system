@@ -24,12 +24,13 @@
 
 //<-------------------------------------------------------------->//
 
-import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date, boolean } from 'drizzle-orm/pg-core';
+import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date, boolean, jsonb } from 'drizzle-orm/pg-core';
 
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
 export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'BOTH']);
+export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN']);
 
 //Registration cart status
 export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED']);
@@ -43,11 +44,18 @@ export const usersTable = pgTable('users_table',
   full_name: varchar('full_name', {length: 255}).notNull(),
   email: text('email').notNull().unique(),
   phone: varchar('phone', {length: 20}).notNull().default(''),
-  bios: text('bios').notNull(),
+  address: text('address').notNull().default(''),
+  hometown: varchar('hometown', { length: 255 }),
+  bios: text('bios'),
   password: text('password').notNull(),
   waiver_signed: boolean('waiver_signed').notNull().default(false),
   waiver_signed_at: timestamp('waiver_signed_at', { withTimezone: true }),
   competitor_type: COMPETITOR_TYPE_ENUM('competitor_type').notNull().default('RIDER'),
+  guardian_name: varchar('guardian_name', { length: 255 }),
+  guardian_phone: varchar('guardian_phone', { length: 20 }),
+  division: DIVISION_ENUM('division'),
+  horse_owner: varchar('horse_owner', { length: 255 }),
+  horses: jsonb('horses'),
   status: STATUS_ENUM('status').notNull().default('PENDING'),
   role: ROLE_ENUM('role').notNull().default('USER'),
   last_activity_date: date('last_activity_date').notNull().defaultNow(),
@@ -84,7 +92,8 @@ export const teamsTable = pgTable('teams_table',
     cartId: uuid('cart_id').references(() => registrationCartTable.id).notNull(),
     riderId: uuid('rider_id').references(() => usersTable.id).notNull(),
     skierId: uuid('skier_id').references(() => usersTable.id).notNull(),
-    horseName: varchar('horse_name', { length: 255 }).notNull(),
+    horseName: varchar('horse_name', { length: 255 }),
+    teamName: varchar('team_name', { length: 255 }),
     status: STATUS_ENUM('status').notNull().default('PENDING'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });

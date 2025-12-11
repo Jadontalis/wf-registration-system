@@ -133,6 +133,46 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                         />
                     )}
 
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"address" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Address</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            placeholder="123 Main St, City, State, Zip" 
+                                            {...field} 
+                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"hometown" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Hometown (Optional)</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            placeholder="City, State" 
+                                            {...field} 
+                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
                     <FormField
                         control={form.control}
                         name={"password" as Path<T>}
@@ -158,7 +198,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                             name={"bios" as Path<T>}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-white">Create a Bio</FormLabel>
+                                    <FormLabel className="text-white">Create a Bio (Optional)</FormLabel>
                                     <FormControl>
                                         <Textarea 
                                             placeholder="Tell us more about how you got into skijoring and we'll give this to the announcer!" 
@@ -192,6 +232,8 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                         <SelectContent className="bg-black border-white/20 text-white">
                                             <SelectItem value="RIDER" className="focus:bg-white/10 focus:text-white">Rider</SelectItem>
                                             <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white">Skier</SelectItem>
+                                            <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Snowboarder</SelectItem>
+                                            <SelectItem value="BOTH" className="focus:bg-white/10 focus:text-white">Both (Skier & Snowboarder)</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-red-400" />
@@ -215,10 +257,10 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                     </FormControl>
                                     <div className="space-y-1 leading-none">
                                         <FormLabel className="text-white">
-                                            I agree to the waiver and terms of service
+                                            I agree to the Whitefish Skijoring Rules & Regulations
                                         </FormLabel>
                                         <FormDescription className="text-white/50">
-                                            You must agree with the above to create an account. To read waiver <Link href="/wfs-waiver" className="underline hover:text-white">click here</Link>.
+                                            You must agree with the above to create an account. To read rules and regulations <Link href="/wfs-rules" className="underline hover:text-white">click here</Link>.
                                         </FormDescription>
                                     </div>
                                     <FormMessage className="text-red-400" />

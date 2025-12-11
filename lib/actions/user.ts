@@ -57,7 +57,9 @@ export async function updateAccountDetails(userId: string, data: {
   full_name: string;
   email: string;
   phone: string;
-  bios: string;
+  address: string;
+  hometown?: string | null;
+  bios?: string | null;
   competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH';
 }) {
   try {
@@ -67,7 +69,9 @@ export async function updateAccountDetails(userId: string, data: {
         full_name: data.full_name,
         email: data.email,
         phone: data.phone,
-        bios: data.bios,
+        address: data.address,
+        hometown: data.hometown,
+        bios: data.bios || '',
         competitor_type: data.competitor_type,
       })
       .where(eq(usersTable.id, userId));

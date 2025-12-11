@@ -1,0 +1,1 @@
+ALTER TABLE "teams_table" ALTER COLUMN "horse_name" DROP NOT NULL;

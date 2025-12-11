@@ -6,7 +6,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Public routes that don't require authentication
-  const publicRoutes = ["/", "/sign-in", "/sign-up", "/wfs-waiver"];
+  const publicRoutes = ["/", "/sign-in", "/sign-up", "/wfs-rules"];
   
   // Allow NextAuth endpoints (public)
   // The folder structure suggests NextAuth is at /api/auth/auth

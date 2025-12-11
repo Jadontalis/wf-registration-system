@@ -3,12 +3,12 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { checkSlotStatus, joinWaitlist } from '@/lib/actions/registration';
+import { checkSlotStatus } from '@/lib/actions/registration';
 import RegistrationTimer from '@/components/RegistrationTimer';
-import TeamRegistrationForm from '@/components/TeamRegistrationForm';
 import { db } from '@/database/drizzle';
-import { usersTable, registrationSlotsTable } from '@/database/schema';
-import { eq, and } from 'drizzle-orm';
+import { registrationCartTable, teamsTable, registrationSlotsTable } from '@/database/schema';
+import { eq, and, desc } from 'drizzle-orm';
+import SubmitForApprovalButton from '@/components/SubmitForApprovalButton';
 
 const RegistrationCartPage = async () => {
   const session = await auth();
@@ -29,33 +29,76 @@ const RegistrationCartPage = async () => {
   const slotStatus = await checkSlotStatus(userId);
 
   if (slotStatus.status !== 'ACTIVE') {
-    await joinWaitlist(userId);
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
         <h1 className="text-2xl font-bold mb-4 text-red-600">Slot Expired</h1>
-        <p className="mb-4 text-white text-lg">Your slot has been given up and you are on the waitlist until a new slot opens.</p>
+        <p className="mb-4 text-white text-lg">Your slot has been given up.</p>
         <a href="/" className="text-blue-400 hover:underline">Return to Home</a>
       </div>
     );
   }
 
-  const user = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
-  const userRole = user[0]?.competitor_type || 'RIDER';
+  // Fetch latest pending cart
+  const cart = await db.select()
+    .from(registrationCartTable)
+    .where(and(
+      eq(registrationCartTable.userId, userId),
+      eq(registrationCartTable.status, 'PENDING')
+    ))
+    .orderBy(desc(registrationCartTable.createdAt))
+    .limit(1);
+
+  if (cart.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <h1 className="text-2xl font-bold text-white mb-4">Your Cart is Empty</h1>
+        <Link href="/registration">
+          <Button className="bg-white text-black hover:bg-white/90 cursor-pointer">Go to Registration</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const currentCart = cart[0];
+  const teams = await db.select().from(teamsTable).where(eq(teamsTable.cartId, currentCart.id));
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-6">
-        <Link href="/">
+      <div className="mb-6 flex justify-between items-center">
+        <Link href="/registration">
           <Button variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-black cursor-pointer">
-            Back to Home Page
+            Back to Registration
           </Button>
         </Link>
+        <RegistrationTimer expiresAt={slotStatus.expiresAt!} />
       </div>
-      <h1 className="text-3xl font-bold mb-6 text-white text-center">Complete Your Registration</h1>
-      <RegistrationTimer expiresAt={slotStatus.expiresAt!} />
+
+      <h1 className="text-3xl font-bold mb-6 text-white text-center">Registration Cart Summary</h1>
       
-      <div className="mt-8">
-        <TeamRegistrationForm userId={userId} userRole={userRole} />
+      <div className="bg-white/5 border border-white/20 rounded-lg p-6 backdrop-blur-sm mb-6">
+        <h2 className="text-xl font-bold text-white mb-4">Teams</h2>
+        {teams.length === 0 ? (
+          <p className="text-white/70">No teams added.</p>
+        ) : (
+          <div className="space-y-4">
+            {teams.map((team, index) => (
+              <div key={team.id} className="p-4 border border-white/10 rounded bg-white/5">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-bold text-white">Team {index + 1}: {team.teamName}</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm text-white/80">
+                  <div><span className="text-white/50">Horse:</span> {team.horseName || 'N/A'}</div>
+                  {/* Note: We'd need to join with users table to get names if we wanted to display them, 
+                      but for now we just show the IDs or basic info available in teamsTable */}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <SubmitForApprovalButton userId={userId} />
       </div>
     </div>
   );
