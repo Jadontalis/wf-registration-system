@@ -55,7 +55,7 @@ const Header = ({ session }: {session: Session}) => {
                         <Link href="/account-settings" className="w-full">Account Settings</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer hover:bg-white/10 focus:bg-white/10 focus:text-white">
-                        <Link href="/billing" className="w-full">Billing</Link>
+                        <Link href="/account-activity" className="w-full">Account Activity</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                         className="cursor-pointer hover:bg-white/10 focus:bg-white/10 text-white focus:text-white"
@@ -133,11 +133,11 @@ const Header = ({ session }: {session: Session}) => {
                                     </li>
                                     <li>
                                         <Link 
-                                            href="/billing"
+                                            href="/account-activity"
                                             onClick={() => setIsMenuOpen(false)}
                                             className="text-lg text-gray-300 hover:text-white transition-colors"
                                         >
-                                            Billing
+                                            Account Activity
                                         </Link>
                                     </li>
                                 </ul>
