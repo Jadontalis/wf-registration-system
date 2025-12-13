@@ -55,7 +55,7 @@ const RegistrationOverview = ({
                     <p>{location}</p>
                     {/* {available_events && <p> {available_events} spots available</p>} */}
                 </div>
-                {summary && <p className="text-white italic">{summary}</p>}
+                {/* summary && <p className="text-white italic">{summary}</p> */}
                 
                 {/* <RegistrationButton userId={userId} /> */}
             </div>

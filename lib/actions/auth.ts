@@ -33,7 +33,8 @@ export const signInWithCredentials = async (params: Pick<authCredentials, 'email
 }
 
 export const signUp = async (params: authCredentials) => {
-    const {full_name, email, phone, address, city, state, zip, password, bios, waiver_signed, competitor_type} = params;
+    const {full_name, email: rawEmail, phone, address, city, state, zip, password, bios, waiver_signed, competitor_type} = params;
+    const email = rawEmail.toLowerCase();
     const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
     
     const ratelimit = new Ratelimit({
