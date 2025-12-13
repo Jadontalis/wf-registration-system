@@ -1,0 +1,28 @@
+import { auth, signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+
+const Header = async () => {
+    const session = await auth();
+
+    return (
+        <header className="flex items-center justify-between px-8 py-4 bg-[#0f172a] border-b border-white/10 text-white">
+            <div>
+                <h2 className="text-xl font-semibold">Welcome, {session?.user?.name}</h2>
+                <p className="text-sm text-gray-400">Manage your application here.</p>
+            </div>
+            
+            <form action={async () => {
+                "use server";
+                await signOut();
+            }}>
+                <Button variant="destructive" className="flex items-center gap-2">
+                    <LogOut size={18} />
+                    Logout
+                </Button>
+            </form>
+        </header>
+    )
+}
+
+export default Header;
