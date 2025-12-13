@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 interface TeamRegistrationFormProps {
   userId: string;
-  userRole: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER';
+  userRole: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
   isLightMode?: boolean;
 }
 
@@ -127,7 +127,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
       toast.error('You must agree to the waiver');
       return;
     }
-    if ((userRole === 'SKIER' || userRole === 'SNOWBOARDER' || userRole === 'BOTH' || userRole === 'RIDER_AND_SKIER_SNOWBOARDER') && !division) {
+    if ((userRole === 'SKIER' || userRole === 'SNOWBOARDER' || userRole === 'SKIER_AND_SNOWBOARDER' || userRole === 'RIDER_AND_SKIER_SNOWBOARDER') && !division) {
       toast.error('Please select a division');
       return;
     }
@@ -228,7 +228,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
             </div>
         </div>
 
-        {(userRole === 'SKIER' || userRole === 'SNOWBOARDER' || userRole === 'BOTH') && (
+        {(userRole === 'SKIER' || userRole === 'SNOWBOARDER' || userRole === 'SKIER_AND_SNOWBOARDER') && (
             <div className="space-y-2">
                 <Label className={textColor}>Select Division</Label>
                 <Select value={division} onValueChange={(v: any) => setDivision(v)}>

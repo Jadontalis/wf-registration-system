@@ -4,7 +4,7 @@ import { db } from '@/database/drizzle';
 import { usersTable } from '@/database/schema';
 import { ilike, and, eq, ne, inArray } from 'drizzle-orm';
 
-export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER', currentUserId: string) {
+export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER', currentUserId: string) {
   if (!query || query.length < 2) return [];
 
   try {
@@ -49,7 +49,7 @@ export async function updateAccountDetails(userId: string, data: {
   state: string;
   zip: string;
   bios?: string | null;
-  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER';
+  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
 }) {
   try {
     await db

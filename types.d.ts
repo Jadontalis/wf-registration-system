@@ -22,5 +22,5 @@ interface authCredentials {
     confirm_password?: string;
     bios?: string;
     waiver_signed: boolean;
-    competitor_type: "RIDER" | "SKIER" | "SNOWBOARDER" | "BOTH" | "RIDER_AND_SKIER_SNOWBOARDER";
+    competitor_type: "RIDER" | "SKIER" | "SNOWBOARDER" | "SKIER_AND_SNOWBOARDER" | "RIDER_AND_SKIER_SNOWBOARDER";
 }

@@ -63,7 +63,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
             router.push("/");
 
         } else {
-            toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`, {
+            toast.error(`Error ${isSignIn ? "signing in" : "creating account"}`, {
                 description: result.error || "Please check your credentials and try again.",
             })
         }
@@ -357,14 +357,14 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                     )}
 
                     <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 font-semibold cursor-pointer">
-                        {isSignIn ? "Sign In" : "Sign Up"}
+                        {isSignIn ? "Sign In" : "Create Account"}
                     </Button>
                 </form>
             </Form>
 
             <p className="text-center text-sm text-white/60 mt-4">
                 {isSignIn ? "New to Whitefish Skijoring? " : "Already have an account? "}
-                <Link href={isSignIn ? "/sign-up" : "/sign-in"} className="font-semibold text-white hover:underline">
+                <Link href={isSignIn ? "/create-account" : "/sign-in"} className="font-semibold text-white hover:underline">
                     {isSignIn ? "Create an account" : "Sign in"}
                 </Link>
             </p>

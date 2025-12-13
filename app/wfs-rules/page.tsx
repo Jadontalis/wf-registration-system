@@ -79,7 +79,7 @@ const WaiverPage = () => {
         </p>
       </div>
 
-      <Link href="/sign-up">
+      <Link href="/create-account">
         <Button className="bg-[#000080] text-white hover:bg-[#000060] font-semibold px-8 cursor-pointer">
           Continue to Create Account
         </Button>
