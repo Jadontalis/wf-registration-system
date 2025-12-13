@@ -48,7 +48,13 @@ export const signUp = async (params: authCredentials) => {
         return { success: false, error: "Too many requests" };
     }
 
-    const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
+    let existingUser;
+    try {
+        existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
+    } catch (error) {
+        console.error("Database error checking existing user:", error);
+        return { success: false, error: "Database error" };
+    }
 
     if (existingUser.length > 0) {
         return { success: false, error: "User with this email already exists" };

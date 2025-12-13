@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,7 +39,7 @@ interface AccountSettingsFormProps {
     state: string;
     zip: string;
     bios?: string | null;
-    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER';
+    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
   };
 }
 
@@ -118,6 +119,8 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
               <FormLabel className="text-white">Phone Number</FormLabel>
               <FormControl>
                 <Input 
+                  type="tel"
+                  autoComplete="tel"
                   placeholder="(555) 555-5555" 
                   {...field} 
                   className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
@@ -205,18 +208,18 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
           name="competitor_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Competitor Type</FormLabel>
+              <FormLabel className="text-white">I am a...</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="bg-transparent border-white/20 text-white focus:border-white focus:ring-white/20">
                     <SelectValue placeholder="Select your role" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-zinc-900 border-white/20 text-white">
+                <SelectContent className="bg-black border-white/20 text-white">
                   <SelectItem value="RIDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Rider</SelectItem>
                   <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white cursor-pointer">Skier</SelectItem>
                   <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Snowboarder</SelectItem>
-                  <SelectItem value="BOTH" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Skier & Snowboarder)</SelectItem>
+                  <SelectItem value="SKIER_AND_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Skier & Snowboarder)</SelectItem>
                   <SelectItem value="RIDER_AND_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Rider & Skier/Snowboarder)</SelectItem>
                 </SelectContent>
               </Select>
@@ -230,15 +233,19 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
           name="bios"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Bio (Optional)</FormLabel>
+              <FormLabel className="text-white">Create a Bio (Optional)</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Tell us about yourself..." 
+                  placeholder="Tell us more about how you got into skijoring and we'll give this to the announcer!" 
                   {...field} 
                   value={field.value || ''}
                   className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20 min-h-[100px]"
+                  maxLength={1000}
                 />
               </FormControl>
+              <FormDescription className="text-white/50 text-xs">
+                  Max 1000 characters
+              </FormDescription>
               <FormMessage className="text-red-400" />
             </FormItem>
           )}

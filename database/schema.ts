@@ -29,7 +29,7 @@ import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date,
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
-export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'BOTH', 'RIDER_AND_SKIER_SNOWBOARDER']);
+export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'SKIER_AND_SNOWBOARDER', 'RIDER_AND_SKIER_SNOWBOARDER']);
 export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN']);
 
 //Registration cart status

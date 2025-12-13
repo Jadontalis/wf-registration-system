@@ -290,7 +290,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                             <SelectItem value="RIDER" className="focus:bg-white/10 focus:text-white">Rider</SelectItem>
                                             <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white">Skier</SelectItem>
                                             <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Snowboarder</SelectItem>
-                                            <SelectItem value="BOTH" className="focus:bg-white/10 focus:text-white">Both (Skier & Snowboarder)</SelectItem>
+                                            <SelectItem value="SKIER_AND_SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Both (Skier & Snowboarder)</SelectItem>
                                             <SelectItem value="RIDER_AND_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Both (Rider & Skier/Snowboarder)</SelectItem>
                                         </SelectContent>
                                     </Select>
