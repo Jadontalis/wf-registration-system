@@ -29,7 +29,7 @@ import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date,
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
-export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'BOTH']);
+export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'BOTH', 'RIDER_AND_SKIER_SNOWBOARDER']);
 export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN']);
 
 //Registration cart status
@@ -45,7 +45,9 @@ export const usersTable = pgTable('users_table',
   email: text('email').notNull().unique(),
   phone: varchar('phone', {length: 20}).notNull().default(''),
   address: text('address').notNull().default(''),
-  hometown: varchar('hometown', { length: 255 }),
+  city: varchar('city', { length: 255 }).notNull().default(''),
+  state: varchar('state', { length: 255 }).notNull().default(''),
+  zip: varchar('zip', { length: 20 }).notNull().default(''),
   bios: text('bios'),
   password: text('password').notNull(),
   waiver_signed: boolean('waiver_signed').notNull().default(false),

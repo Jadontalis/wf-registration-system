@@ -6,6 +6,9 @@ import { eq } from "drizzle-orm";
 import { signIn, signOut } from "@/auth";
 import { hash } from "bcryptjs";
 import { AuthError } from "next-auth";
+import { headers } from "next/headers";
+import { Ratelimit } from "@upstash/ratelimit";
+import redis from "@/database/redis";
 
 export const signInWithCredentials = async (params: Pick<authCredentials, 'email' | 'password'>) => {
     const { email, password } = params;
@@ -30,7 +33,20 @@ export const signInWithCredentials = async (params: Pick<authCredentials, 'email
 }
 
 export const signUp = async (params: authCredentials) => {
-    const {full_name, email, phone, address, hometown, password, bios, waiver_signed, competitor_type} = params;
+    const {full_name, email, phone, address, city, state, zip, password, bios, waiver_signed, competitor_type} = params;
+    const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
+    
+    const ratelimit = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(5, "1 m"),
+        analytics: true,
+    });
+
+    const { success } = await ratelimit.limit(ip);
+
+    if (!success) {
+        return { success: false, error: "Too many requests" };
+    }
 
     const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
 
@@ -48,7 +64,9 @@ export const signUp = async (params: authCredentials) => {
             email,
             phone,
             address,
-            hometown,
+            city,
+            state,
+            zip,
             password: hashedPassword,
             bios: bios || '',
             waiver_signed,

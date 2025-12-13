@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 //Form design
 
 import { Button } from "@/components/ui/button"
+import { WAIVER_TEXT } from "@/constants";
 import {
   Form,
   FormControl,
@@ -134,43 +135,78 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                     )}
 
                     {!isSignIn && (
-                        <FormField
-                            control={form.control}
-                            name={"address" as Path<T>}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Address</FormLabel>
-                                    <FormControl>
-                                        <Input 
-                                            placeholder="123 Main St, City, State, Zip" 
-                                            {...field} 
-                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-400" />
-                                </FormItem>
-                            )}
-                        />
-                    )}
-
-                    {!isSignIn && (
-                        <FormField
-                            control={form.control}
-                            name={"hometown" as Path<T>}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Hometown (Optional)</FormLabel>
-                                    <FormControl>
-                                        <Input 
-                                            placeholder="City, State" 
-                                            {...field} 
-                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-red-400" />
-                                </FormItem>
-                            )}
-                        />
+                        <>
+                            <FormField
+                                control={form.control}
+                                name={"address" as Path<T>}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-white">Address</FormLabel>
+                                        <FormControl>
+                                            <Input 
+                                                placeholder="123 Main St" 
+                                                {...field} 
+                                                className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-400" />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="grid grid-cols-3 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name={"city" as Path<T>}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-white">City</FormLabel>
+                                            <FormControl>
+                                                <Input 
+                                                    placeholder="City" 
+                                                    {...field} 
+                                                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-red-400" />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={"state" as Path<T>}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-white">State</FormLabel>
+                                            <FormControl>
+                                                <Input 
+                                                    placeholder="State" 
+                                                    {...field} 
+                                                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-red-400" />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={"zip" as Path<T>}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-white">Zip</FormLabel>
+                                            <FormControl>
+                                                <Input 
+                                                    placeholder="Zip" 
+                                                    {...field} 
+                                                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-red-400" />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </>
                     )}
 
                     <FormField
@@ -178,7 +214,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                         name={"password" as Path<T>}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Password</FormLabel>
+                                <FormLabel className="text-white">{isSignIn ? "Password" : "Create Password"}</FormLabel>
                                 <FormControl>
                                     <Input 
                                         type="password" 
@@ -191,6 +227,27 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                             </FormItem>
                         )}
                     />
+
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name={"confirm_password" as Path<T>}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-white">Retype Password</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="password" 
+                                            placeholder="********" 
+                                            {...field} 
+                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-400" />
+                                </FormItem>
+                            )}
+                        />
+                    )}
 
                     {!isSignIn && (
                         <FormField
@@ -234,6 +291,7 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                             <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white">Skier</SelectItem>
                                             <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Snowboarder</SelectItem>
                                             <SelectItem value="BOTH" className="focus:bg-white/10 focus:text-white">Both (Skier & Snowboarder)</SelectItem>
+                                            <SelectItem value="RIDER_AND_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white">Both (Rider & Skier/Snowboarder)</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-red-400" />
@@ -243,30 +301,59 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                     )}
 
                     {!isSignIn && (
-                        <FormField
-                            control={form.control}
-                            name={"waiver_signed" as Path<T>}
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-white/20 p-4">
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                            className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-black"
-                                        />
-                                    </FormControl>
-                                    <div className="space-y-1 leading-none">
-                                        <FormLabel className="text-white">
-                                            I agree to the Whitefish Skijoring Rules & Regulations
+                        <div className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name={"rules_signed" as Path<T>}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-white/20 p-4">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-black cursor-pointer"
+                                            />
+                                        </FormControl>
+                                        <div className="space-y-1 leading-none">
+                                            <FormLabel className="text-white cursor-pointer">
+                                                I agree to the Whitefish Skijoring Rules & Regulations
+                                            </FormLabel>
+                                            <FormDescription className="text-white/50">
+                                                You must agree with the above to create an account. To read rules and regulations <Link href="/wfs-rules" className="underline hover:text-white">click here</Link>.
+                                            </FormDescription>
+                                        </div>
+                                        <FormMessage className="text-red-400" />
+                                    </FormItem>
+                                )}
+                            />
+                            <p className="text-sm text-white/70 text-center">
+                                <strong className="text-white">COMPETITOR Whitefish Skijoring, Whitefish MT WAIVER AND RELEASE FORM</strong>
+                                <br />
+                                Please read entire form carefully before signing.
+                            </p>
+                            <div className="h-64 overflow-y-auto border border-white/20 p-4 rounded bg-white text-base whitespace-pre-wrap text-black">
+                                {WAIVER_TEXT}
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name={"waiver_signed" as Path<T>}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-black cursor-pointer"
+                                            />
+                                        </FormControl>
+                                        <FormLabel className="font-bold text-white cursor-pointer">
+                                            I agree to all of the above *
                                         </FormLabel>
-                                        <FormDescription className="text-white/50">
-                                            You must agree with the above to create an account. To read rules and regulations <Link href="/wfs-rules" className="underline hover:text-white">click here</Link>.
-                                        </FormDescription>
-                                    </div>
-                                    <FormMessage className="text-red-400" />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage className="text-red-400" />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     )}
 
                     <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 font-semibold cursor-pointer">

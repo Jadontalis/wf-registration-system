@@ -15,9 +15,12 @@ interface authCredentials {
     email: string;
     phone: string;
     address: string;
-    hometown?: string;
+    city: string;
+    state: string;
+    zip: string;
     password: string;
+    confirm_password?: string;
     bios?: string;
     waiver_signed: boolean;
-    competitor_type: "RIDER" | "SKIER" | "SNOWBOARDER" | "BOTH";
+    competitor_type: "RIDER" | "SKIER" | "SNOWBOARDER" | "BOTH" | "RIDER_AND_SKIER_SNOWBOARDER";
 }

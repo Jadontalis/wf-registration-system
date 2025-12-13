@@ -34,9 +34,11 @@ interface AccountSettingsFormProps {
     email: string;
     phone: string;
     address: string;
-    hometown?: string | null;
+    city: string;
+    state: string;
+    zip: string;
     bios?: string | null;
-    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH';
+    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER';
   };
 }
 
@@ -48,7 +50,6 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
     resolver: zodResolver(accountUpdateSchema),
     defaultValues: {
       ...initialData,
-      hometown: initialData.hometown ?? undefined,
       bios: initialData.bios ?? undefined,
     },
   });
@@ -135,7 +136,7 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
               <FormLabel className="text-white">Address</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="123 Main St, City, State, Zip" 
+                  placeholder="123 Main St" 
                   {...field} 
                   className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
                 />
@@ -145,24 +146,59 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="hometown"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-white">Hometown (Optional)</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="City, State" 
-                  {...field} 
-                  value={field.value || ''}
-                  className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
-                />
-              </FormControl>
-              <FormMessage className="text-red-400" />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">City</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="City" 
+                    {...field} 
+                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="state"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">State</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="State" 
+                    {...field} 
+                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="zip"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Zip</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Zip" 
+                    {...field} 
+                    className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -181,6 +217,7 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
                   <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white cursor-pointer">Skier</SelectItem>
                   <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Snowboarder</SelectItem>
                   <SelectItem value="BOTH" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Skier & Snowboarder)</SelectItem>
+                  <SelectItem value="RIDER_AND_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Rider & Skier/Snowboarder)</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage className="text-red-400" />

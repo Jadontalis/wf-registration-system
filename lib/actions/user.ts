@@ -2,28 +2,15 @@
 
 import { db } from '@/database/drizzle';
 import { usersTable } from '@/database/schema';
-import { ilike, and, eq, ne } from 'drizzle-orm';
+import { ilike, and, eq, ne, inArray } from 'drizzle-orm';
 
-export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH', currentUserId: string) {
+export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER', currentUserId: string) {
   if (!query || query.length < 2) return [];
 
   try {
     // Logic:
-    // If searching for RIDER, we want people who are RIDER
-    // If searching for SKIER/SNOWBOARDER/BOTH, we want people who are NOT RIDER (so SKIER, SNOWBOARDER, or BOTH)
-    
-    // However, the 'type' parameter passed here is what we are LOOKING FOR.
-    // So if I am a RIDER, I pass 'SKIER' (or generic non-rider).
-    // But wait, the UI passes the type.
-    
-    // Let's adjust the query based on what we are looking for.
-    // If type is 'RIDER', we look for 'RIDER'.
-    // If type is NOT 'RIDER', we might want any of the non-rider types.
-    
-    // Actually, let's simplify. The UI should probably handle the logic of what to ask for.
-    // But if I am a RIDER, I can partner with SKIER, SNOWBOARDER, or BOTH.
-    // So if the passed type is 'SKIER' (which is what the UI currently defaults to for non-riders),
-    // we should probably search for all non-riders.
+    // If searching for RIDER, we want people who are RIDER or RIDER_AND_SKIER_SNOWBOARDER
+    // If searching for SKIER/SNOWBOARDER/BOTH, we want people who are NOT RIDER (so SKIER, SNOWBOARDER, BOTH, or RIDER_AND_SKIER_SNOWBOARDER)
     
     const isLookingForRider = type === 'RIDER';
     
@@ -38,8 +25,8 @@ export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' |
       .where(
         and(
           isLookingForRider 
-            ? eq(usersTable.competitor_type, 'RIDER')
-            : ne(usersTable.competitor_type, 'RIDER'), // Look for anyone who is NOT a rider (Skier, Snowboarder, Both)
+            ? inArray(usersTable.competitor_type, ['RIDER', 'RIDER_AND_SKIER_SNOWBOARDER'])
+            : ne(usersTable.competitor_type, 'RIDER'), // Look for anyone who is NOT a pure rider
           ne(usersTable.id, currentUserId), // Exclude self
           ilike(usersTable.full_name, `%${query}%`)
         )
@@ -58,9 +45,11 @@ export async function updateAccountDetails(userId: string, data: {
   email: string;
   phone: string;
   address: string;
-  hometown?: string | null;
+  city: string;
+  state: string;
+  zip: string;
   bios?: string | null;
-  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH';
+  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'BOTH' | 'RIDER_AND_SKIER_SNOWBOARDER';
 }) {
   try {
     await db
@@ -70,7 +59,9 @@ export async function updateAccountDetails(userId: string, data: {
         email: data.email,
         phone: data.phone,
         address: data.address,
-        hometown: data.hometown,
+        city: data.city,
+        state: data.state,
+        zip: data.zip,
         bios: data.bios || '',
         competitor_type: data.competitor_type,
       })

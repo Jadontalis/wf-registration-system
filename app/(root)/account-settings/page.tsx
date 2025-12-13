@@ -31,7 +31,9 @@ const AccountSettingsPage = async () => {
             email: userData.email,
             phone: userData.phone,
             address: userData.address,
-            hometown: userData.hometown,
+            city: userData.city,
+            state: userData.state,
+            zip: userData.zip,
             bios: userData.bios,
             competitor_type: userData.competitor_type,
           }}
