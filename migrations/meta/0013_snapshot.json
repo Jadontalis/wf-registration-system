@@ -1,6 +1,6 @@
 {
-  "id": "abee75ac-0693-43c7-8fc5-42811e9c6ed1",
-  "prevId": "3611f1f6-81ea-4a43-942c-1617bf1675f8",
+  "id": "36ed74c8-bb29-49a8-b538-b029fab30a71",
+  "prevId": "abee75ac-0693-43c7-8fc5-42811e9c6ed1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -267,8 +267,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "full_name_test": {
-          "name": "full_name_test",
+        "full_name": {
+          "name": "full_name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -293,11 +293,26 @@
           "notNull": true,
           "default": "''"
         },
-        "hometown": {
-          "name": "hometown",
+        "city": {
+          "name": "city",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "''"
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "zip": {
+          "name": "zip",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
         },
         "bios": {
           "name": "bios",
@@ -489,7 +504,8 @@
         "RIDER",
         "SKIER",
         "SNOWBOARDER",
-        "BOTH"
+        "BOTH",
+        "RIDER_AND_SKIER_SNOWBOARDER"
       ]
     },
     "public.division_enum": {
