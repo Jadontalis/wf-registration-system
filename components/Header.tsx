@@ -35,12 +35,12 @@ const Header = ({ session }: {session: Session}) => {
                 pathname === '/' ? 'text-white' : 'text-white/70 hover:text-white'
             )}>Home</Link>
         </li>
-        <li>
+        {/* <li>
             <Link href="/registration-cart" className={cn(
                 'text-lg md:text-xl cursor-pointer capitalize font-semibold',
                 pathname === '/registration-cart' ? 'text-white' : 'text-white/70 hover:text-white'
             )}>Registration Cart</Link>
-        </li>
+        </li> */}
         <li>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -95,7 +95,7 @@ const Header = ({ session }: {session: Session}) => {
                         Home
                     </Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link 
                         href="/registration-cart"
                         onClick={() => setIsMenuOpen(false)}
@@ -105,7 +105,7 @@ const Header = ({ session }: {session: Session}) => {
                         )}
                     >
                         Registration Cart
-                    </Link>
+                    </Link> */}
 
                     <li>
                         <div className="flex flex-col items-center w-full">
@@ -144,7 +144,6 @@ const Header = ({ session }: {session: Session}) => {
                             )}
                         </div>
                     </li>
-                </li>
                 
                 <li className="mt-4 w-full px-4">
                     <Button 
