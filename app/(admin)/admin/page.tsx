@@ -12,17 +12,17 @@ const AdminDashboard = async () => {
             <h1 className="text-3xl font-bold text-white">Dashboard Overview</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#0f172a] p-6 rounded-xl border border-white/10">
+                <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
                     <h3 className="text-gray-400 text-sm font-medium uppercase">Total Users</h3>
                     <p className="text-4xl font-bold text-white mt-2">{userCount.count}</p>
                 </div>
                 
-                <div className="bg-[#0f172a] p-6 rounded-xl border border-white/10">
+                <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
                     <h3 className="text-gray-400 text-sm font-medium uppercase">Registered Teams</h3>
                     <p className="text-4xl font-bold text-white mt-2">{teamCount.count}</p>
                 </div>
 
-                <div className="bg-[#0f172a] p-6 rounded-xl border border-white/10">
+                <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
                     <h3 className="text-gray-400 text-sm font-medium uppercase">Waitlist Entries</h3>
                     <p className="text-4xl font-bold text-white mt-2">{waitlistCount.count}</p>
                 </div>

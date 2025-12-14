@@ -16,29 +16,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [CredentialsProvider({ 
 
     async authorize(credentials) {
-        if(!credentials?.email || !credentials?.password) {
+        try {
+            if(!credentials?.email || !credentials?.password) {
+                return null;
+            }
+
+            const email = (credentials.email as string).toLowerCase();
+            const user = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
+
+            if(user.length === 0) {
+                return null;
+            }
+
+            const isPasswordValid = await bcrypt.compare(credentials.password as string, user[0].password);
+
+            if (!isPasswordValid) {
+                return null;
+            }
+
+            return {
+                id: user[0].id.toString(),
+                email: user[0].email,
+                name: user[0].full_name,
+                role: user[0].role,
+            } as User;
+        } catch (error) {
+            console.error("Error during authorization:", error);
             return null;
         }
-
-        const email = (credentials.email as string).toLowerCase();
-        const user = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
-
-        if(user.length === 0) {
-            return null;
-        }
-
-        const isPasswordValid = await bcrypt.compare(credentials.password as string, user[0].password);
-
-        if (!isPasswordValid) {
-            return null;
-        }
-
-        return {
-            id: user[0].id.toString(),
-            email: user[0].email,
-            name: user[0].full_name,
-            role: user[0].role,
-        } as User;
     }
 
   })],

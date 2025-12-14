@@ -26,9 +26,19 @@ export const adminSideBarLinks = [
     text: "All Users",
   },
   {
+    img: "/icons/admin/clipboard.svg",
+    route: "/admin/registration",
+    text: "Registration",
+  },
+  {
     img: "/icons/admin/book.svg",
     route: "/admin/teams",
     text: "Teams",
+  },
+  {
+    img: "/icons/admin/menu.svg",
+    route: "/admin/divisions",
+    text: "Divisions",
   },
   {
     img: "/icons/admin/bookmark.svg",

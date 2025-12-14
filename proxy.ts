@@ -9,15 +9,14 @@ export default auth((req) => {
   const publicRoutes = ["/", "/sign-in", "/create-account", "/wfs-rules"];
   
   // Allow NextAuth endpoints (public)
-  // The folder structure suggests NextAuth is at /api/auth/auth
-  const isAuthRoute = pathname.startsWith("/api/auth/auth");
+  const isAuthRoute = pathname.startsWith("/api/auth/");
 
   const isPublic = publicRoutes.includes(pathname) || isAuthRoute;
 
   if (!isLoggedIn && !isPublic) {
     // Return 401 for API routes
     if (pathname.startsWith("/api")) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     // Redirect to sign-in for pages
     return NextResponse.redirect(new URL("/sign-in", req.url));
