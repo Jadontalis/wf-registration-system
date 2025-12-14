@@ -135,7 +135,7 @@ export async function releaseSlot(userId: string) {
             eq(registrationSlotsTable.status, 'RESERVED')
         ));
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false };
     }
 }

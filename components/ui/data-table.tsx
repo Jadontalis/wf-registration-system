@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
       ...data.map((row) =>
         exportableColumns
           .map((col) => {
-            const value = (row as any)[col.accessorKey];
+            const value = (row as Record<string, unknown>)[col.accessorKey];
             const stringValue = value === null || value === undefined ? "" : String(value);
             return `"${stringValue.replace(/"/g, '""')}"`;
           })

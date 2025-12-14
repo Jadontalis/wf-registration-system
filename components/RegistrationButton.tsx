@@ -34,7 +34,7 @@ const RegistrationButton = ({ userId }: RegistrationButtonProps) => {
       } else {
         toast.error(result.error || 'Something went wrong');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to begin registration');
     } finally {
       setLoading(false);
@@ -52,7 +52,7 @@ const RegistrationButton = ({ userId }: RegistrationButtonProps) => {
       } else {
         toast.error(result.error);
       }
-    } catch (error) {
+    } catch {
       toast.error('Error:Failed to join waitlist');
     } finally {
       setLoading(false);

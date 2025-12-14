@@ -17,11 +17,10 @@ interface Props
 {
   className?: string
   variant?: EventCoverVariant;
-  coverColor: string
   coverUrl: string
 }
 
-const EventCover = ({ className, variant = 'regular', coverColor = '#151d32', coverUrl = 'https://placehold.co/400x600.png' }: Props) => 
+const EventCover = ({ className, variant = 'regular', coverUrl = 'https://placehold.co/400x600.png' }: Props) => 
 {
   return (
     <div className = {cn('relative transition-all duration-300', variantStyles[variant], className,)}>

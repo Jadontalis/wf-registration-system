@@ -33,7 +33,7 @@ const RegistrationCartPage = async () => {
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
         <h1 className="text-2xl font-bold mb-4 text-red-600">Slot Expired</h1>
         <p className="mb-4 text-white text-lg">Your slot has been given up.</p>
-        <a href="/" className="text-blue-400 hover:underline">Return to Home</a>
+        <Link href="/" className="text-blue-400 hover:underline">Return to Home</Link>
       </div>
     );
   }

@@ -24,7 +24,7 @@
 
 //<-------------------------------------------------------------->//
 
-import { uuid, varchar, integer, pgTable, serial, text, timestamp, pgEnum, date, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb } from 'drizzle-orm/pg-core';
 
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);

@@ -1,6 +1,6 @@
 import { db } from "@/database/drizzle";
 import { usersTable } from "@/database/schema";
-import { count, eq } from "drizzle-orm";
+import { count } from "drizzle-orm";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 

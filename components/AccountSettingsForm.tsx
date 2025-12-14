@@ -65,7 +65,7 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
       } else {
         toast.error(result.error || 'Failed to update account details');
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setIsSubmitting(false);

@@ -1,21 +1,16 @@
 import React from 'react'
 import Image from 'next/image'
-import RegistrationButton from './RegistrationButton'
 
 interface RegistrationOverviewProps extends EventData {
     userId?: string;
 }
 
 const RegistrationOverview = ({
-    id,
     title,
     date,
     location,
     description,
     cover,
-    summary,
-    available_events,
-    userId
 }: RegistrationOverviewProps) => 
 {
     return <section className='w-full px-6 py-8 flex flex-col items-center justify-center'>

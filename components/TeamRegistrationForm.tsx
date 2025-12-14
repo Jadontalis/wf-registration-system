@@ -10,7 +10,7 @@ import { searchCompetitors } from '@/lib/actions/user';
 import { submitRegistrationCart } from '@/lib/actions/registration';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Trash2, X, Plus } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
 interface TeamRegistrationFormProps {
@@ -33,12 +33,19 @@ interface Horse {
   bio: string;
 }
 
+interface SearchResult {
+  id: string;
+  fullName: string;
+  email: string;
+  competitorType: string;
+}
+
 import { WAIVER_TEXT } from '@/constants';
 
 const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamRegistrationFormProps) => {
   const router = useRouter();
   const [teams, setTeams] = useState<Team[]>([{ id: 1, partnerId: '', partnerName: '', horseName: '', teamName: '' }]);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchingForTeamId, setSearchingForTeamId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -114,7 +121,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
     setSearchResults(results);
   };
 
-  const selectPartner = (teamId: number, partner: any) => {
+  const selectPartner = (teamId: number, partner: SearchResult) => {
     updateTeam(teamId, 'partnerId', partner.id);
     updateTeam(teamId, 'partnerName', partner.fullName);
     setSearchingForTeamId(null);
@@ -179,7 +186,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
       } else {
         toast.error(result.error || 'Submission failed');
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setSubmitting(false);
@@ -231,7 +238,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
         {(userRole === 'SKIER' || userRole === 'SNOWBOARDER' || userRole === 'SKIER_AND_SNOWBOARDER') && (
             <div className="space-y-2">
                 <Label className={textColor}>Select Division</Label>
-                <Select value={division} onValueChange={(v: any) => setDivision(v)}>
+                <Select value={division} onValueChange={(v: 'NOVICE' | 'SPORT' | 'OPEN') => setDivision(v)}>
                     <SelectTrigger className={`${inputBg} ${borderColor} ${textColor} data-placeholder:${textColor} ${focusRing} ${hoverBorderColor} transition-colors cursor-pointer`}>
                         <SelectValue placeholder="Select Division" />
                     </SelectTrigger>

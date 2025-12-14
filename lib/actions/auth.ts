@@ -4,7 +4,6 @@ import { db } from "@/database/drizzle";
 import { usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { signIn, signOut } from "@/auth";
-import { hash } from "bcryptjs";
 import { AuthError } from "next-auth";
 import { headers } from "next/headers";
 import { Ratelimit } from "@upstash/ratelimit";
@@ -83,9 +82,9 @@ export const signUp = async (params: authCredentials) => {
 
        await signInWithCredentials({ email, password });
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.log("Error during user sign up:", error);
-        if (error.code === '23505') { // Unique constraint violation
+        if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: string }).code === '23505') { // Unique constraint violation
             return { success: false, error: "User with this email already exists" };
         }
         return { success: false, error: "Error during sign up" };
