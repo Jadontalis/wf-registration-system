@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, Search } from "lucide-react"
+import { ChevronDown, Search, Download } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -73,6 +73,37 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  const exportToCsv = () => {
+    const exportableColumns = columns.filter(
+      (col) => "accessorKey" in col
+    ) as (ColumnDef<TData, TValue> & { accessorKey: string })[];
+
+    const headers = exportableColumns.map((col) => col.accessorKey);
+    
+    const csvContent = [
+      headers.join(","),
+      ...data.map((row) =>
+        exportableColumns
+          .map((col) => {
+            const value = (row as any)[col.accessorKey];
+            const stringValue = value === null || value === undefined ? "" : String(value);
+            return `"${stringValue.replace(/"/g, '""')}"`;
+          })
+          .join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "data_export.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
@@ -87,9 +118,17 @@ export function DataTable<TData, TValue>({
             className="pl-8 bg-black/20 border-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/20"
             />
         </div>
+        <Button 
+            variant="outline" 
+            className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white cursor-pointer"
+            onClick={exportToCsv}
+        >
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white cursor-pointer">
+            <Button variant="outline" className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white cursor-pointer">
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

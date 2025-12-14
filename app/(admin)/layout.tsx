@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Sidebar from "@/components/admin/Sidebar";
 import Header from "@/components/admin/Header";
+import Footer from "@/components/Footer";
 import { db } from "@/database/drizzle";
 import { usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
@@ -36,9 +37,10 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             <Sidebar />
             <div className="flex w-full flex-1 flex-col">
                 <Header />
-                <div className="p-8">
+                <div className="p-8 flex-1">
                     {children}
                 </div>
+                <Footer compact />
             </div>
         </main>
     );
