@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, useForm, UseFormReturn, FieldValues, SubmitHandler, Path } from "react-hook-form";
 import { z, ZodType } from "zod";
@@ -44,6 +46,9 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
     //Router for sign in and sign up redirection
 
     const router = useRouter();
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const form: UseFormReturn<T> = useForm({
         resolver: zodResolver(schema),
@@ -216,12 +221,35 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                             <FormItem>
                                 <FormLabel className="text-white">{isSignIn ? "Password" : "Create Password"}</FormLabel>
                                 <FormControl>
-                                    <Input 
-                                        type="password" 
-                                        placeholder="********" 
-                                        {...field} 
-                                        className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
-                                    />
+                                    <div className="relative">
+                                        <Input 
+                                            type={showPassword ? "text" : "password"} 
+                                            placeholder="********" 
+                                            {...field} 
+                                            onBlur={() => {
+                                                field.onBlur();
+                                                setShowPassword(false);
+                                            }}
+                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20 pr-10"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-white/50 hover:text-white cursor-pointer"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            onMouseDown={(e) => e.preventDefault()}
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff className="h-4 w-4" />
+                                            ) : (
+                                                <Eye className="h-4 w-4" />
+                                            )}
+                                            <span className="sr-only">
+                                                {showPassword ? "Hide password" : "Show password"}
+                                            </span>
+                                        </Button>
+                                    </div>
                                 </FormControl>
                                 <FormMessage className="text-red-400" />
                             </FormItem>
@@ -236,12 +264,35 @@ const AuthForm = <T extends FieldValues>({ type, schema, defaultValues, onSubmit
                                 <FormItem>
                                     <FormLabel className="text-white">Retype Password</FormLabel>
                                     <FormControl>
-                                        <Input 
-                                            type="password" 
-                                            placeholder="********" 
-                                            {...field} 
-                                            className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20"
-                                        />
+                                        <div className="relative">
+                                            <Input 
+                                                type={showConfirmPassword ? "text" : "password"} 
+                                                placeholder="********" 
+                                                {...field} 
+                                                onBlur={() => {
+                                                    field.onBlur();
+                                                    setShowConfirmPassword(false);
+                                                }}
+                                                className="bg-transparent border-white/20 text-white placeholder:text-white/50 focus:border-white focus:ring-white/20 pr-10"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-white/50 hover:text-white cursor-pointer"
+                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                onMouseDown={(e) => e.preventDefault()}
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                                <span className="sr-only">
+                                                    {showConfirmPassword ? "Hide password" : "Show password"}
+                                                </span>
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage className="text-red-400" />
                                 </FormItem>
