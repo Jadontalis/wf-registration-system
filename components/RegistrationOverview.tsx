@@ -20,7 +20,7 @@ const RegistrationOverview = ({
             </h1>
 
             <h2 className="text-xl md:text-xl text-white leading-relaxed">
-                You now have access to our competitor portal are eligible to be registered on teams to compete in our <b>2026</b> event. Here you can <b>view and update your account details</b> and your <b>registration requests status.</b> 
+                You now have access to our competitor portal and are eligible to be registered on teams to compete in our <b>2026</b> event. Here you can <b>view and update your account details</b> and your <b>registration requests status.</b> 
             </h2>
 
             <h2 className="text-xl md:text-xl text-white leading-relaxed">
