@@ -46,37 +46,253 @@ const WaiverPage = () => {
         onScroll={handleScroll}
         className="bg-white p-6 rounded-lg backdrop-blur-sm mb-8 max-h-[60vh] overflow-y-auto border border-white/20"
       >
-        <h2 className="text-xl font-bold mb-4">COMPETITOR Whitefish Skijoring, WAIVER AND RELEASE FORM</h2>
-        <p className="mb-4">
-          By agreeing to this waiver and release form for the Whitefish Skijoring Event, PARTICIPANT(S) (undersigned participant(s) or undersigned parent(s) or guardian(s)) agree(s) and fully understand(s) the following:
-        </p>
-        <p className="mb-4">
-          I have read and understand the official rules.
-        </p>
-        <p className="mb-4">
-          I fully understand that my entry fee is non-refundable other than under the circumstances noted in the official rules.
-        </p>
-        <p className="mb-4">
-          I fully understand that engaging in the sport of skijoring is a hazardous, dangerous and unpredictable activity, which could result in personal injury and/or death. I am voluntarily participating in this event with knowledge of the danger involved and hereby agree to accept any and all risks of injury and/or death, and I agree that I am solely responsible for any injury to myself or any other person due to my participation in this event. I agree that I am solely responsible for my own safety while participating in this event, and I am free to refuse to participate in this event for any reason.
-        </p>
-        <p className="mb-4">
-          I hereby certify that I am physically fit and have trained to participate in this event. I agree that all decisions I make and actions I take are my own. I further agree that I will pay for any and all medical or other expenses incurred as a result of injury to myself by participating in this event, and that I will not seek indemnification from Whitefish Winter Carnival Skijoring, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers.
-        </p>
-        <p className="mb-4">
-          I understand that horseback riding, racing and skiing and/or snowboarding behind a horse will expose me to extreme health risks. I agree to assume and accept the risks that occur in the activity of horseback riding, skiing, snowboarding, racing and/or skiing and/or snowboarding behind a horse.
-        </p>
-        <p className="mb-4">
-          I hereby waive and release for myself, my heirs or assigns, executors and administrators all rights or claims for damage which I may have now or in the future against the Whitefish Winter Carnival Skijoring Association, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers from any and all claims relating to or pertaining to personal injuries, including death, or damages to property, real or personal, caused by or arising out of my involvement in this event.
-        </p>
-        <p className="mb-4">
-          I fully understand that I am responsible for the health and safety of the horse. I waive and release all rights or claims against Whitefish Winter Carnival Skijoring Association, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers in case of injury and/or death of the horse. I also understand I am fully responsible and personally liable for any expenses incurred if the horse is injured or for any actions the horse may take causing injury or damage to humans, livestock or property, and I agree that I will not seek indemnification for any such injuries from the Whitefish Winter Carnival Skijoring Association, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers.
-        </p>
-        <p className="mb-4">
-          I agree to allow Whitefish Winter Carnival Skijoring Association Officials, Race Organizers and Media representatives the use of my name, photos, video recordings, comments or commentaries to help publicize and promote Whitefish Winter Carnival Skijoring Association and the sport of Skijoring.
-        </p>
-        <p className="mb-4">
-          Good sportsmanship is required at Whitefish Skijoring Races. I acknowledge that the Whitefish Skijoring officials may disqualify any person or team they deem is acting in an unsportsmanlike manner at any time including, but not limited to registration, Calcutta, and awards ceremonies. If I am disqualified, I understand and agree that I will surrender my entry fees as well as forfeit event and Calcutta winnings.
-        </p>
+        <h3 className="text-lg font-bold mt-6 mb-2">Competitor Rules</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Teams consist of a horse, rider, and skier/snowboarder. Minimum human competitor age: 13.</li>
+          <li>Each team receives one run per day.</li>
+          <li>No substitutions allowed after Friday at 9:00 PM.</li>
+          <li>If any team member cannot compete, the team will be scratched.</li>
+          <li>No refunds issued after Friday at 9:00 PM.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Entry Fees</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Novice – $100/team</li>
+          <li>Snowboard – $150/team</li>
+          <li>Sport – $150/team</li>
+          <li>Open – $200/team</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Horse Limits</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Horses may only compete in one division with the exception of Snowboard.</li>
+          <li>Max 2 runs per horse per day.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Skier/Snowboarder Limits</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Skiers may compete in one division with the exception of Snowboard.</li>
+          <li>Novice: up to 3 runs</li>
+          <li>Sport/Open: up to 4 runs</li>
+          <li>Snowboarders: up to 3 runs</li>
+          <li>Helmets required; eye protection recommended.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Rider Limits</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Riders may compete in multiple divisions.</li>
+          <li>Up to 4 runs per day, with the exception of Snowboard.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Overall Limits</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>No competitor may be on more than 7 teams.</li>
+          <li>No identical team (same 3 heartbeats) may run more than once per day.</li>
+        </ul>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">Division Rules</h2>
+        
+        <h3 className="text-lg font-bold mt-6 mb-2">Novice Division</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>For beginning-level competitors and horses.</li>
+          <li>1st-place Horse or Skier Novice winners must move up unless approved.</li>
+          <li>Competitors must have under 3 seasons experience unless approved.</li>
+          <li>Entry Fee: $100</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Snowboard Division</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Horse, rider, snowboarder teams.</li>
+          <li>Entry Fee: $150</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Sport Division</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>For intermediate-level competitors.</li>
+          <li>1st-place Horse or Skier Sport winners must move to Open unless approved.</li>
+          <li>Entry Fee: $150</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Open Division</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Highest-level division.</li>
+          <li>Open riders may compete in Sport with Sport-level horse/skier.</li>
+          <li>Open riders (current or past) may not compete in Novice.</li>
+          <li>Entry Fee: $200</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Exception Requests</h3>
+        <p className="mb-4">Must be emailed to competitors.wfskijoring@gmail.com before Friday registration closes.</p>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">Safety, Sportsmanship & Conduct</h2>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Unsafe Behavior</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Unsafe behavior may result in disqualification from current or future events.</li>
+          <li>Reports may be submitted by competitors, staff, or volunteers.</li>
+          <li>Decisions made by 3+ race officials; final.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Sportsmanship</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Respect toward horses, competitors, volunteers, and officials required.</li>
+          <li>Unsportsmanlike conduct may result in disqualification from current or future events.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Competitor Behavior</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Non-competitors may not ride or be pulled by horses.</li>
+          <li>Horses prohibited from spectator areas.</li>
+          <li>Dogs must be restrained during race hours.</li>
+          <li>Competitors responsible for guests.</li>
+          <li>Keep nonessential people out of staging area.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Human Health</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Medical care/transport costs are the responsibility of the recipient.</li>
+          <li>Officials may disqualify competitors deemed unfit to compete.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Horse Health</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Veterinarian may scratch horses for welfare concerns.</li>
+          <li>Veterinarian services costs are the responsibility of the recipient.</li>
+          <li>Horse ambulance donated and provided by Rebecca Farm.</li>
+          <li>Veterinarian provided by LaSalle Veterinary Clinic.</li>
+          <li>Bell & splint boots & traction shoes recommended.</li>
+        </ul>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">The Course</h2>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>800–1000 feet long with ample run out</li>
+          <li>Skier passes right of red, left of blue gates.</li>
+          <li>3–4 jumps, 3–5 feet.</li>
+          <li>Difficulty increases by division.</li>
+          <li>Course maps posted online.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Course Walk-Through</h3>
+        <p className="mb-4">Allowed before race start and before division starts.</p>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Scratching</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Refund only if scratched before first run Saturday.</li>
+          <li>No refunds afterward.</li>
+        </ul>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">Equipment Rules</h2>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Skier Rope</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Max length: 33 ft.</li>
+          <li>Min diameter: ⅜ inch.</li>
+          <li>No handles or devices; one knot allowed at the end</li>
+          <li>Non-event ropes require inspection.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Rope Attachment</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Attach to saddle horn or primary rigging.</li>
+          <li>Must begin within 9 inches of cantle.</li>
+          <li>Incorrect rigging → correction and restart; second failure = DQ.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Rings</h3>
+        <p className="mb-4">Only event-provided rings allowed, no batons.</p>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Saddles</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Must be free of impediments.</li>
+          <li>No extra ropes, saddle bags, firearm holsters.</li>
+          <li>Night latches, tapaderos, approved gear allowed.</li>
+        </ul>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">Race Procedures</h2>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Run Order</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Posted online and at start gate.</li>
+          <li>Change requests allowed before division start.</li>
+          <li>Sunday changes must be emailed by 10 PM Saturday.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Start Gate Procedures</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Competitors must be ready when called.</li>
+          <li>Valid delays may result in resequencing.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Sparby Rule</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Three minutes to start after 'Course Clear.'</li>
+          <li>1st timeout → end of division.</li>
+          <li>2nd timeout → DNS.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Start Rules & Restarts</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Time starts when skier’s boots cross start line.</li>
+          <li>Rope drop before crossing allows restart.</li>
+          <li>Max 2 immediate restarts.</li>
+          <li>Two failures to stop before halfway = no further attempts.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Timing Equipment</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Electronic timing with backup hand timing.</li>
+          <li>Hitting start timer → 2-second penalty.</li>
+          <li>Hitting finish timer → DNF.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Penalties</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Missed gate → 2 seconds.</li>
+          <li>Horse hitting skier gate → 2 seconds.</li>
+          <li>Breaking jump plane → 2 seconds.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Finish Requirements</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Skier must be upright and holding rope.</li>
+          <li>Rider must be mounted.</li>
+          <li>Rings counted only if in possession.</li>
+          <li>Horse crossing finish on skier side causing timer stop → DNF.</li>
+        </ul>
+
+        <h2 className="text-xl font-bold mt-8 mb-4">Protests, Results, Awards & Contacts</h2>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Penalty Protests</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Must be reported before leaving finish area and will pause the race</li>
+          <li>Reviewed by arena judges and Head of Flaggers.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Other Protests</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Submit same day via email or voicemail.</li>
+          <li>Reviewed by 3+ officials; final.</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Results</h3>
+        <p className="mb-4">Posted online and in print after each race day.</p>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Awards</h3>
+        <p className="mb-4">Buckles, money, and prizes awarded Sunday night.</p>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Contacts</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>General questions: competitors.wfskijoring@gmail.com</li>
+          <li>Exception requests: Email before registering competitors.wfskijoring@gmail.com</li>
+          <li>Substitutions/cancellations before Fri 9 PM: (406) 260-8725</li>
+          <li>Saturday scratches: Email or call; timestamps used</li>
+        </ul>
+
+        <h3 className="text-lg font-bold mt-6 mb-2">Vet/Medical:</h3>
+        <ul className="list-disc pl-5 mb-4 space-y-1">
+          <li>Brock Bolin: (815) 980-6222</li>
+          <li>Taryne Haskamp: (616) 322-7143</li>
+        </ul>
       </div>
 
       <Link href="/create-account">
