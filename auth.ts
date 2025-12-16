@@ -17,11 +17,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async authorize(credentials) {
         try {
-            if(!credentials?.email || !credentials?.password) {
+            if(!credentials?.email || !credentials?.password || typeof credentials.email !== 'string' || typeof credentials.password !== 'string') {
                 return null;
             }
 
-            const email = (credentials.email as string).toLowerCase();
+            const email = credentials.email.toLowerCase();
             const user = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
 
             if(user.length === 0) {

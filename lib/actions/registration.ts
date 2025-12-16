@@ -7,8 +7,19 @@ import { eq, and, gt, count, desc } from 'drizzle-orm';
 const MAX_SLOTS = 50; // Configurable
 const SLOT_DURATION_MINUTES = 10;
 
+import { auth } from "@/auth";
+
 export async function reserveSlot(userId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    if (session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
     // 1. Check if user already has an active slot
     const existingSlot = await db
       .select()
@@ -63,6 +74,15 @@ export async function reserveSlot(userId: string) {
 
 export async function joinWaitlist(userId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    if (session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
     // Check if already on waitlist
     const existingEntry = await db
       .select()
@@ -93,6 +113,11 @@ export async function joinWaitlist(userId: string) {
 
 export async function checkSlotStatus(userId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+        return { status: 'ERROR' }; // Or handle unauthorized explicitly
+    }
+
     const slot = await db
       .select()
       .from(registrationSlotsTable)
@@ -126,17 +151,29 @@ export async function checkSlotStatus(userId: string) {
 
 //may be depreciated soon 
 export async function releaseSlot(userId: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id || session.user.id !== userId) {
+            return { success: false, error: "Unauthorized" };
+        }
     // Mark current active slot as RELEASED
     try {
-        await db.update(registrationSlotsTable)
-        .set({ status: 'RELEASED' })
-        .where(and(
-            eq(registrationSlotsTable.userId, userId),
-            eq(registrationSlotsTable.status, 'RESERVED')
-        ));
+        await db
+            .update(registrationSlotsTable)
+            .set({ status: 'RELEASED' })
+            .where(
+                and(
+                    eq(registrationSlotsTable.userId, userId),
+                    eq(registrationSlotsTable.status, 'RESERVED')
+                )
+            );
         return { success: true };
-    } catch {
-        return { success: false };
+    } catch (error) {
+        console.error('Error releasing slot:', error);
+        return { success: false, error: 'Failed to release slot' };
+    }
+    } catch (error) {
+        return { success: false, error: 'Unauthorized' };
     }
 }
 
@@ -153,6 +190,11 @@ export async function submitRegistrationCart(
   }
 ) {
   try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
     // 1. Verify slot is still valid
     const slotStatus = await checkSlotStatus(userId);
     if (slotStatus.status !== 'ACTIVE') {
@@ -209,6 +251,11 @@ export async function submitRegistrationCart(
 
 export async function finalizeRegistration(userId: string) {
   try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
     // 1. Verify slot is still valid
     const slotStatus = await checkSlotStatus(userId);
     if (slotStatus.status !== 'ACTIVE') {

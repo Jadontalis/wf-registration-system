@@ -11,12 +11,28 @@ import { Ratelimit } from "@upstash/ratelimit";
 import redis from "@/database/redis";
 import { workflowClient } from "@/lib/workflow";
 import config from "@/lib/config";
+import { signupSchema, signinSchema } from "@/lib/validations";
 
 export const signInWithCredentials = async (params: Pick<authCredentials, 'email' | 'password'>) => {
     const { email, password } = params;
 
+    const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
+    
+    const ratelimit = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(5, "1 m"),
+        analytics: true,
+    });
+
+    const { success } = await ratelimit.limit(ip);
+
+    if (!success) {
+        return { success: false, error: "Too many requests" };
+    }
+
     try {
-        await signIn("credentials", { email, password, redirect: false });
+        const validatedData = signinSchema.parse({ email, password });
+        await signIn("credentials", { email: validatedData.email, password: validatedData.password, redirect: false });
 
         return { success: true };
         
@@ -35,7 +51,8 @@ export const signInWithCredentials = async (params: Pick<authCredentials, 'email
 }
 
 export const signUp = async (params: authCredentials) => {
-    const {full_name, email: rawEmail, phone, address, city, state, zip, password, bios, waiver_signed, competitor_type} = params;
+    const validatedData = signupSchema.parse(params);
+    const {full_name, email: rawEmail, phone, address, city, state, zip, password, bios, waiver_signed, competitor_type} = validatedData;
     const email = rawEmail.toLowerCase();
     const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
     

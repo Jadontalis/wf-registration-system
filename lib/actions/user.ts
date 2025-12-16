@@ -4,10 +4,16 @@ import { db } from '@/database/drizzle';
 import { usersTable } from '@/database/schema';
 import { ilike, and, eq, ne, inArray } from 'drizzle-orm';
 
+import { auth } from "@/auth";
+import { accountUpdateSchema } from "@/lib/validations";
+
 export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER', currentUserId: string) {
   if (!query || query.length < 2) return [];
 
   try {
+    const session = await auth();
+    if (!session?.user?.id) return [];
+    
     // Logic:
     // If searching for RIDER, we want people who are RIDER or RIDER_AND_SKIER_SNOWBOARDER
     // If searching for SKIER/SNOWBOARDER/BOTH, we want people who are NOT RIDER (so SKIER, SNOWBOARDER, BOTH, or RIDER_AND_SKIER_SNOWBOARDER)
@@ -27,7 +33,7 @@ export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' |
           isLookingForRider 
             ? inArray(usersTable.competitor_type, ['RIDER', 'RIDER_AND_SKIER_SNOWBOARDER'])
             : ne(usersTable.competitor_type, 'RIDER'), // Look for anyone who is NOT a pure rider
-          ne(usersTable.id, currentUserId), // Exclude self
+          ne(usersTable.id, session.user.id), // Exclude self
           ilike(usersTable.full_name, `${query}%`)
         )
       )
@@ -52,18 +58,30 @@ export async function updateAccountDetails(userId: string, data: {
   competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
 }) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    // Allow user to update their own profile, or Admin to update anyone
+    if (session.user.id !== userId && session.user.role !== "ADMIN") {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const validatedData = accountUpdateSchema.parse(data);
+
     await db
       .update(usersTable)
       .set({
-        full_name: data.full_name,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        zip: data.zip,
-        bios: data.bios || '',
-        competitor_type: data.competitor_type,
+        full_name: validatedData.full_name,
+        email: validatedData.email,
+        phone: validatedData.phone,
+        address: validatedData.address,
+        city: validatedData.city,
+        state: validatedData.state,
+        zip: validatedData.zip,
+        bios: validatedData.bios || '',
+        competitor_type: validatedData.competitor_type,
       })
       .where(eq(usersTable.id, userId));
 
