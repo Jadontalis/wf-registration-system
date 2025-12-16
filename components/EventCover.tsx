@@ -27,7 +27,13 @@ const EventCover = ({ className, variant = 'regular', coverUrl = 'https://placeh
       EVENT SIDE SVG
 
       <div className="absolute z-10" style={{ left: "12%", width: "87.5%", height: "88%" }}>
-        <Image src={coverUrl} alt="Event Cover" fill className="rounded-sm object-fill" />
+        <Image 
+          src={coverUrl} 
+          alt="Event Cover" 
+          fill 
+          className="rounded-sm object-fill" 
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
       </div>
     </div>
   );

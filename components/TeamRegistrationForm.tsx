@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDebounce } from '@/lib/hooks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -48,6 +49,8 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchingForTeamId, setSearchingForTeamId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<{ query: string, teamId: number | null }>({ query: '', teamId: null });
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const [waiverAgreed, setWaiverAgreed] = useState(false);
   const [guardianName, setGuardianName] = useState('');
@@ -120,6 +123,12 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
     const results = await searchCompetitors(query, targetType, userId);
     setSearchResults(results);
   };
+
+  useEffect(() => {
+    if (debouncedSearchQuery.teamId !== null) {
+      handleSearch(debouncedSearchQuery.query, debouncedSearchQuery.teamId);
+    }
+  }, [debouncedSearchQuery]);
 
   const selectPartner = (teamId: number, partner: SearchResult) => {
     updateTeam(teamId, 'partnerId', partner.id);
@@ -338,7 +347,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false }: TeamReg
                 value={team.partnerName}
                 onChange={(e) => {
                   updateTeam(team.id, 'partnerName', e.target.value);
-                  handleSearch(e.target.value, team.id);
+                  setSearchQuery({ query: e.target.value, teamId: team.id });
                 }}
                 className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
               />

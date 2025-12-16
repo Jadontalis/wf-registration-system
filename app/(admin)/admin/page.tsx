@@ -1,9 +1,17 @@
 import { db } from "@/database/drizzle";
 import { usersTable, teamsTable, waitlistTable, registrationCartTable } from "@/database/schema";
 import { count } from "drizzle-orm";
-import { DivisionChart } from "@/components/admin/charts/DivisionChart";
-import { CompetitorTypeChart } from "@/components/admin/charts/CompetitorTypeChart";
-import { UserGrowthChart } from "@/components/admin/charts/UserGrowthChart";
+import dynamic from 'next/dynamic';
+
+const DivisionChart = dynamic(() => import('@/components/admin/charts/DivisionChart').then(mod => mod.DivisionChart), {
+    loading: () => <div className="h-[350px] w-full animate-pulse bg-white/5 rounded-xl" />
+});
+const CompetitorTypeChart = dynamic(() => import('@/components/admin/charts/CompetitorTypeChart').then(mod => mod.CompetitorTypeChart), {
+    loading: () => <div className="h-[350px] w-full animate-pulse bg-white/5 rounded-xl" />
+});
+const UserGrowthChart = dynamic(() => import('@/components/admin/charts/UserGrowthChart').then(mod => mod.UserGrowthChart), {
+    loading: () => <div className="h-[350px] w-full animate-pulse bg-white/5 rounded-xl" />
+});
 
 const AdminDashboard = async () => {
     const [userCount] = await db.select({ count: count() }).from(usersTable);

@@ -28,7 +28,7 @@ export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' |
             ? inArray(usersTable.competitor_type, ['RIDER', 'RIDER_AND_SKIER_SNOWBOARDER'])
             : ne(usersTable.competitor_type, 'RIDER'), // Look for anyone who is NOT a pure rider
           ne(usersTable.id, currentUserId), // Exclude self
-          ilike(usersTable.full_name, `%${query}%`)
+          ilike(usersTable.full_name, `${query}%`)
         )
       )
       .limit(10);

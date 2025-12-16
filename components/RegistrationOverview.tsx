@@ -40,6 +40,8 @@ const RegistrationOverview = ({
                         width={400} 
                         height={300} 
                         className="rounded-lg"
+                        priority={true}
+                        sizes="(max-width: 768px) 100vw, 400px"
                     />
                 )}
                 

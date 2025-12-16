@@ -24,7 +24,7 @@
 
 //<-------------------------------------------------------------->//
 
-import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb, index } from 'drizzle-orm/pg-core';
 
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
@@ -70,7 +70,10 @@ export const registrationSlotsTable = pgTable('registration_slots_table', {
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   status: SLOT_STATUS_ENUM('status').notNull().default('RESERVED'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+}, (table) => ({
+  userIdIdx: index('slot_user_id_idx').on(table.userId),
+  statusIdx: index('slot_status_idx').on(table.status),
+}));
 
 export const waitlistTable = pgTable('waitlist_table', {
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
