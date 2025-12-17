@@ -1,0 +1,1 @@
+ALTER TYPE "public"."division_enum" ADD VALUE 'SNOWBOARD';

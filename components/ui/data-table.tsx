@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { cn } from "@/lib/utils"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -36,12 +37,22 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   searchKey: string
+  className?: string
+  meta?: any
+  onSave?: () => void
+  hasPendingChanges?: boolean
+  isSaving?: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
+  className,
+  meta,
+  onSave,
+  hasPendingChanges,
+  isSaving
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,6 +75,7 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
+    meta,
     state: {
       sorting,
       columnFilters,
@@ -74,18 +86,20 @@ export function DataTable<TData, TValue>({
   })
 
   const exportToCsv = () => {
-    const exportableColumns = columns.filter(
-      (col) => "accessorKey" in col
-    ) as (ColumnDef<TData, TValue> & { accessorKey: string })[];
+    // Get visible columns that have an accessorKey
+    const visibleColumns = table.getVisibleLeafColumns().filter(
+      (col) => (col.columnDef as any).accessorKey
+    );
 
-    const headers = exportableColumns.map((col) => col.accessorKey);
+    const headers = visibleColumns.map((col) => col.id);
     
     const csvContent = [
       headers.join(","),
       ...data.map((row) =>
-        exportableColumns
+        visibleColumns
           .map((col) => {
-            const value = (row as Record<string, unknown>)[col.accessorKey];
+            const accessorKey = (col.columnDef as any).accessorKey;
+            const value = (row as Record<string, unknown>)[accessorKey];
             const stringValue = value === null || value === undefined ? "" : String(value);
             return `"${stringValue.replace(/"/g, '""')}"`;
           })
@@ -105,8 +119,8 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4 gap-4">
+    <div className={cn("w-full flex flex-col", className)}>
+      <div className="flex flex-col md:flex-row items-start md:items-center py-4 gap-4">
         <div className="relative max-w-sm w-full">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-white" />
             <Input
@@ -209,7 +223,17 @@ export function DataTable<TData, TValue>({
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="space-x-2">
+        <div className="space-x-2 flex items-center">
+          {hasPendingChanges && (
+             <Button 
+                size="sm" 
+                onClick={onSave} 
+                disabled={isSaving}
+                className="bg-green-600 hover:bg-green-700 text-white border-none mr-2"
+             >
+                {isSaving ? "Saving..." : "Save Changes"}
+             </Button>
+          )}
           <Button
             variant="outline"
             size="sm"

@@ -30,7 +30,7 @@ import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb, 
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
 export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'SKIER_AND_SNOWBOARDER', 'RIDER_AND_SKIER_SNOWBOARDER']);
-export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN']);
+export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD']);
 
 //Registration cart status
 export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED']);
@@ -58,7 +58,6 @@ export const usersTable = pgTable('users_table',
   division: DIVISION_ENUM('division'),
   horse_owner: varchar('horse_owner', { length: 255 }),
   horses: jsonb('horses'),
-  status: STATUS_ENUM('status').notNull().default('PENDING'),
   role: ROLE_ENUM('role').notNull().default('USER'),
   last_activity_date: date('last_activity_date').notNull().defaultNow(),
   created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

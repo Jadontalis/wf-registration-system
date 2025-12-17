@@ -1,17 +1,3 @@
-export const navigationLinks = [
-  {
-    href: "/registration-cart",
-    label: "Registration Cart",
-  },
-
-  {
-    img: "/icons/user.svg",
-    selectedImg: "/icons/user-fill.svg",
-    href: "/my-profile",
-    label: "My Profile",
-  },
-];
-
 export const adminSideBarLinks = [
   {
     img: "/icons/admin/home.svg",
@@ -27,6 +13,11 @@ export const adminSideBarLinks = [
     img: "/icons/admin/clipboard.svg",
     route: "/admin/registration",
     text: "Registration",
+    subItems: [
+      { text: "Approved Carts", route: "/admin/registration/approved", icon: "CheckCircle" },
+      { text: "Waitlisted Carts", route: "/admin/registration/waitlisted", icon: "Clock" },
+      { text: "Denied Carts", route: "/admin/registration/rejected", icon: "XCircle" },
+    ]
   },
   {
     img: "/icons/admin/book.svg",
@@ -37,6 +28,12 @@ export const adminSideBarLinks = [
     img: "/icons/admin/menu.svg",
     route: "/admin/divisions",
     text: "Divisions",
+    subItems: [
+      { text: "Open", route: "/admin/divisions/open", icon: "Trophy" },
+      { text: "Sport", route: "/admin/divisions/sport", icon: "Medal" },
+      { text: "Novice", route: "/admin/divisions/novice", icon: "Smile" },
+      { text: "Snowboard", route: "/admin/divisions/snowboard", icon: "Snowflake" },
+    ]
   },
   {
     img: "/icons/admin/bookmark.svg",
@@ -44,12 +41,6 @@ export const adminSideBarLinks = [
     text: "Waitlist",
   },
 ];
-
-export const FIELD_NAMES = {
-  fullName: "Full Name",
-  email: "Email",
-  password: "Password",
-};
 
 export const WAIVER_TEXT = `By agreeing to this waiver and release form for the Whitefish Skijoring Event, PARTICIPANT(S) (undersigned participant(s) or undersigned parent(s) or guardian(s)) agree(s) and fully understand(s) the following:
 
@@ -62,13 +53,6 @@ I hereby waive and release for myself, my heirs or assigns, executors and admini
 I fully understand that I am responsible for the health and safety of the horse.  I waive and release all rights or claims against Whitefish Winter Carnival Skijoring Association, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers in case of injury and/or death of the horse.  I also understand I am fully responsible and personally liable for any expenses incurred if the horse is injured or for any actions the horse may take causing injury or damage to humans, livestock or property, and I agree that I will not seek indemnification for any such injuries from the Whitefish Winter Carnival Skijoring Association, its Board Members, Sponsors, Land Owners, Race Directors, Volunteers, Spectators, or insurers, or from any Municipalities, the State of Montana, Flathead County, or any City, County and State Agencies, Partners, Employees, or Agents or their insurers. 
 I agree to allow Whitefish Winter Carnival Skijoring Association Officials, Race Organizers and Media representatives the use of my name, photos, video recordings, comments or commentaries to help publicize and promote Whitefish Winter Carnival Skijoring Association and the sport of Skijoring.
 Good sportsmanship is required at Whitefish Skijoring Races.  I acknowledge that the Whitefish Skijoring officials may disqualify any person or team they deem is acting in an unsportsmanlike manner at any time including, but not limited to registration, Calcutta, and awards ceremonies.  If I am disqualified, I understand and agree that I will surrender my entry fees as well as forfeit event and Calcutta winnings.`;
-
-export const FIELD_TYPES = {
-  fullName: "text",
-  email: "email",
-  password: "password",
-};
-
 
 export const sampleEvents = [
     {

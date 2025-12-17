@@ -91,3 +91,50 @@ export async function updateAccountDetails(userId: string, data: {
     return { success: false, error: 'Failed to update account details' };
   }
 }
+
+export async function updateUserRole(userId: string, role: "ADMIN" | "USER") {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        // Verify the requester is an admin
+        const requester = await db.select({ role: usersTable.role }).from(usersTable).where(eq(usersTable.id, session.user.id)).limit(1);
+        if (!requester.length || requester[0].role !== "ADMIN") {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        await db.update(usersTable).set({ role }).where(eq(usersTable.id, userId));
+        
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating user role:", error);
+        return { success: false, error: "Failed to update role" };
+    }
+}
+
+export async function updateUserRoleBulk(updates: { id: string; role: "ADMIN" | "USER" }[]) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        // Verify the requester is an admin
+        const requester = await db.select({ role: usersTable.role }).from(usersTable).where(eq(usersTable.id, session.user.id)).limit(1);
+        if (!requester.length || requester[0].role !== "ADMIN") {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        // Process updates in a transaction or parallel
+        // Drizzle doesn't have a simple bulk update for different values, so we loop
+        // For a small number of admin updates, this is fine.
+        await db.transaction(async (tx) => {
+            for (const update of updates) {
+                await tx.update(usersTable).set({ role: update.role }).where(eq(usersTable.id, update.id));
+            }
+        });
+        
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating user roles bulk:", error);
+        return { success: false, error: "Failed to update roles" };
+    }
+}

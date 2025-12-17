@@ -18,7 +18,7 @@ export const CompetitorTypeChart = ({ data }: CompetitorTypeChartProps) => {
         <Pie
           data={data}
           cx="50%"
-          cy="50%"
+          cy="40%"
           innerRadius={60}
           outerRadius={80}
           paddingAngle={5}
@@ -34,9 +34,11 @@ export const CompetitorTypeChart = ({ data }: CompetitorTypeChartProps) => {
             labelStyle={{ color: '#fff' }}
         />
         <Legend 
+            layout="vertical"
             verticalAlign="bottom" 
-            height={36}
-            formatter={(value) => <span className="text-gray-300">{value}</span>}
+            align="center"
+            wrapperStyle={{ width: '100%' }}
+            formatter={(value) => <span className="text-gray-300 text-xs">{value}</span>}
         />
       </PieChart>
     </ResponsiveContainer>

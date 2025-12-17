@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import RegistrationButton from './RegistrationButton';
 
 interface RegistrationOverviewProps extends EventData {
     userId?: string;
@@ -11,6 +12,9 @@ const RegistrationOverview = ({
     location,
     description,
     cover,
+    summary,
+    available_events,
+    userId,
 }: RegistrationOverviewProps) => 
 {
     return <section className='w-full px-6 py-8 flex flex-col items-center justify-center'>
@@ -50,9 +54,8 @@ const RegistrationOverview = ({
                 <div className="flex gap-4 text-white justify-center">
                     <p>{date}</p>
                     <p>{location}</p>
-                    {/* {available_events && <p> {available_events} spots available</p>} */}
+                    {available_events > 0 && <p> {available_events} spots available</p>}
                 </div>
-                {/* summary && <p className="text-white italic">{summary}</p> */}
                 
                 {/* <RegistrationButton userId={userId} /> */}
             </div>

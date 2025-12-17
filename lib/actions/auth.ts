@@ -9,7 +9,6 @@ import { AuthError } from "next-auth";
 import { headers } from "next/headers";
 import { Ratelimit } from "@upstash/ratelimit";
 import redis from "@/database/redis";
-import { workflowClient } from "@/lib/workflow";
 import config from "@/lib/config";
 import { signupSchema, signinSchema } from "@/lib/validations";
 
@@ -98,14 +97,6 @@ export const signUp = async (params: authCredentials) => {
             waiver_signed,
             waiver_signed_at: waiver_signed ? new Date() : null,
             competitor_type,
-        });
-
-        await workflowClient.trigger({
-            url: `${config.env.apiEndpoint}/api/workflows/onboarding`,
-            body: {
-                email,
-                fullName: full_name,
-            },
         });
 
        await signInWithCredentials({ email, password });

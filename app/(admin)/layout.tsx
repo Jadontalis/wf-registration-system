@@ -35,9 +35,9 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                 />
             </div>
             <Sidebar />
-            <div className="flex w-full flex-1 flex-col">
+            <div className="flex w-full flex-1 flex-col min-w-0">
                 <Header />
-                <div className="p-8 flex-1">
+                <div className="p-4 md:p-8 flex-1 min-w-0">
                     {children}
                 </div>
                 <Footer compact />

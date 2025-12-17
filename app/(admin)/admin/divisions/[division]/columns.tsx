@@ -5,13 +5,12 @@ import { ColumnDef } from "@tanstack/react-table"
 export type TeamRow = {
   id: string
   teamName: string | null
-  riderName: string | null
+  riderName: string
   riderBio: string | null
-  skierName: string | null
+  skierName: string
   skierBio: string | null
   horseName: string | null
   horseOwner: string | null
-  status: "APPROVED" | "REJECTED" | "PENDING"
 }
 
 export const columns: ColumnDef<TeamRow>[] = [
