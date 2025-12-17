@@ -40,7 +40,7 @@ export function UsersTable({ data }: UsersTableProps) {
                 setPendingChanges({})
                 router.refresh()
             } else {
-                toast.error("Failed to save changes")
+                toast.error(result.error || "Failed to save changes")
             }
         })
     }

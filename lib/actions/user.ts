@@ -123,18 +123,24 @@ export async function updateUserRoleBulk(updates: { id: string; role: "ADMIN" | 
             return { success: false, error: "Unauthorized" };
         }
 
-        // Process updates in a transaction or parallel
+        // Process updates in parallel since neon-http doesn't support transactions
         // Drizzle doesn't have a simple bulk update for different values, so we loop
         // For a small number of admin updates, this is fine.
-        await db.transaction(async (tx) => {
-            for (const update of updates) {
-                await tx.update(usersTable).set({ role: update.role }).where(eq(usersTable.id, update.id));
-            }
-        });
+        await Promise.all(
+            updates.map(update => 
+                db.update(usersTable)
+                  .set({ role: update.role })
+                  .where(eq(usersTable.id, update.id))
+            )
+        );
         
         return { success: true };
     } catch (error) {
         console.error("Error updating user roles bulk:", error);
+        if (error instanceof Error) {
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+        }
         return { success: false, error: "Failed to update roles" };
     }
 }
