@@ -11,7 +11,7 @@ interface DivisionChartProps {
 
 export const DivisionChart = ({ data }: DivisionChartProps) => {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>
         <XAxis
           dataKey="name"

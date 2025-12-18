@@ -13,7 +13,7 @@ const COLORS = ['#ffffff', '#cccccc', '#999999', '#666666', '#333333'];
 
 export const CompetitorTypeChart = ({ data }: CompetitorTypeChartProps) => {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
           data={data}

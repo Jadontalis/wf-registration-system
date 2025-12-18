@@ -13,7 +13,7 @@ const DivisionsPage = async () => {
     .groupBy(usersTable.division);
 
     // Ensure all divisions are listed even if count is 0
-    const allDivisions = ['NOVICE', 'SPORT', 'OPEN'];
+    const allDivisions = ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD'];
     const stats = allDivisions.map(div => {
         const found = divisionCounts.find(d => d.division === div);
         return {

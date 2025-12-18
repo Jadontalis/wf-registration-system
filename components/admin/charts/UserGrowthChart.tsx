@@ -11,7 +11,7 @@ interface UserGrowthChartProps {
 
 export const UserGrowthChart = ({ data }: UserGrowthChartProps) => {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height="100%">
       <AreaChart data={data}>
         <defs>
           <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">

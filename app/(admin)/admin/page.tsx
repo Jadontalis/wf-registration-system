@@ -1,7 +1,9 @@
 import { db } from "@/database/drizzle";
 import { usersTable, teamsTable, waitlistTable, registrationCartTable } from "@/database/schema";
-import { count } from "drizzle-orm";
+import { count, desc } from "drizzle-orm";
 import dynamic from 'next/dynamic';
+import { ExpandableChart } from "@/components/admin/charts/ExpandableChart";
+import { RecentUsersTable } from "@/components/admin/RecentUsersTable";
 
 const DivisionChart = dynamic(() => import('@/components/admin/charts/DivisionChart').then(mod => mod.DivisionChart), {
     loading: () => <div className="h-[350px] w-full animate-pulse bg-white/5 rounded-xl" />
@@ -18,6 +20,19 @@ const AdminDashboard = async () => {
     const [teamCount] = await db.select({ count: count() }).from(teamsTable);
     const [waitlistCount] = await db.select({ count: count() }).from(waitlistTable);
     const [registrationCount] = await db.select({ count: count() }).from(registrationCartTable);
+
+    // Get recent users for details
+    const recentUsers = await db.select({
+        id: usersTable.id,
+        full_name: usersTable.full_name,
+        email: usersTable.email,
+        created_at: usersTable.created_at,
+        competitor_type: usersTable.competitor_type,
+        division: usersTable.division,
+    })
+    .from(usersTable)
+    .orderBy(desc(usersTable.created_at))
+    .limit(50);
 
     // Get division stats
     const divisionCounts = await db.select({
@@ -95,21 +110,25 @@ const AdminDashboard = async () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
-                    <h3 className="text-white text-lg font-bold mb-4">Activity (Last 30 Days)</h3>
+                <ExpandableChart 
+                    title="Activity (Last 30 Days)"
+                    details={<RecentUsersTable users={recentUsers} />}
+                >
                     <UserGrowthChart data={growthStats} />
-                </div>
+                </ExpandableChart>
 
-                <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
-                    <h3 className="text-white text-lg font-bold mb-4">Competitor Types</h3>
+                <ExpandableChart 
+                    title="Competitor Types"
+                >
                     <CompetitorTypeChart data={competitorStats} />
-                </div>
+                </ExpandableChart>
             </div>
 
-            <div className="bg-black/20 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:border-white/50">
-                <h3 className="text-white text-lg font-bold mb-4">Division Distribution</h3>
+            <ExpandableChart 
+                title="Division Distribution"
+            >
                 <DivisionChart data={divisionStats} />
-            </div>
+            </ExpandableChart>
         </div>
     );
 };
