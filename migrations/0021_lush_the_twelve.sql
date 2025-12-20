@@ -1,0 +1,1 @@
+ALTER TABLE "teams_table" ADD COLUMN "division" "division_enum";

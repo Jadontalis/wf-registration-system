@@ -4,10 +4,10 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { checkSlotStatus } from '@/lib/actions/registration';
-import RegistrationTimer from '@/components/RegistrationTimer';
 import { db } from '@/database/drizzle';
-import { registrationCartTable, teamsTable, registrationSlotsTable } from '@/database/schema';
+import { registrationCartTable, teamsTable, registrationSlotsTable, usersTable } from '@/database/schema';
 import { eq, and, desc } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import SubmitForApprovalButton from '@/components/SubmitForApprovalButton';
 
 const RegistrationCartPage = async () => {
@@ -60,7 +60,22 @@ const RegistrationCartPage = async () => {
   }
 
   const currentCart = cart[0];
-  const teams = await db.select().from(teamsTable).where(eq(teamsTable.cartId, currentCart.id));
+  
+  const rider = alias(usersTable, "rider");
+  const skier = alias(usersTable, "skier");
+
+  const teams = await db.select({
+    id: teamsTable.id,
+    teamNumber: teamsTable.teamNumber,
+    horseName: teamsTable.horseName,
+    horseOwner: teamsTable.horseOwner,
+    riderName: rider.full_name,
+    skierName: skier.full_name,
+  })
+  .from(teamsTable)
+  .leftJoin(rider, eq(teamsTable.riderId, rider.id))
+  .leftJoin(skier, eq(teamsTable.skierId, skier.id))
+  .where(eq(teamsTable.cartId, currentCart.id));
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -70,7 +85,6 @@ const RegistrationCartPage = async () => {
             Back to Registration
           </Button>
         </Link>
-        <RegistrationTimer expiresAt={slotStatus.expiresAt!} />
       </div>
 
       <h1 className="text-3xl font-bold mb-6 text-white text-center">Registration Cart Summary</h1>
@@ -84,12 +98,13 @@ const RegistrationCartPage = async () => {
             {teams.map((team, index) => (
               <div key={team.id} className="p-4 border border-white/10 rounded bg-white/5">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-bold text-white">Team {index + 1}: {team.teamName}</h3>
+                  <h3 className="font-bold text-white">Team {index + 1}</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm text-white/80">
+                  <div><span className="text-white/50">Rider:</span> {team.riderName}</div>
+                  <div><span className="text-white/50">Skier/Boarder:</span> {team.skierName}</div>
                   <div><span className="text-white/50">Horse:</span> {team.horseName || 'N/A'}</div>
-                  {/* Note: We'd need to join with users table to get names if we wanted to display them, 
-                      but for now we just show the IDs or basic info available in teamsTable */}
+                  <div><span className="text-white/50">Owner:</span> {team.horseOwner || 'N/A'}</div>
                 </div>
               </div>
             ))}

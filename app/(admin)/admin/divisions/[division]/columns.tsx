@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 export type TeamRow = {
   id: string
-  teamName: string | null
+  teamNumber: number
   riderName: string
   riderBio: string | null
   skierName: string
@@ -15,9 +15,9 @@ export type TeamRow = {
 
 export const columns: ColumnDef<TeamRow>[] = [
   {
-    accessorKey: "teamName",
+    accessorKey: "teamNumber",
     header: "Team #",
-    cell: ({ row }) => row.getValue("teamName") || "N/A",
+    cell: ({ row }) => row.getValue("teamNumber") || "N/A",
   },
   {
     accessorKey: "riderName",

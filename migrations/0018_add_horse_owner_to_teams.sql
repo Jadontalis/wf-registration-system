@@ -1,0 +1,1 @@
+ALTER TABLE "teams_table" ADD COLUMN "horse_owner" varchar(255);

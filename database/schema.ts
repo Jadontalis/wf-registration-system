@@ -24,16 +24,17 @@
 
 //<-------------------------------------------------------------->//
 
-import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb, index } from 'drizzle-orm/pg-core';
+import { uuid, varchar, pgTable, text, timestamp, pgEnum, date, boolean, jsonb, index, serial } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 //User account status
-export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING']);
+export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING', 'SUBMITTED']);
 export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
-export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'SKIER_AND_SNOWBOARDER', 'RIDER_AND_SKIER_SNOWBOARDER']);
+export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'SKIER_AND_SNOWBOARDER', 'RIDER_SKIER_SNOWBOARDER']);
 export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD']);
 
 //Registration cart status
-export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED']);
+export const REG_CART_STATUS_ENUM= pgEnum('reg_cart_status_enum', ['APPROVED', 'PENDING', 'REJECTED', 'SUBMITTED']);
 export const SLOT_STATUS_ENUM = pgEnum('slot_status_enum', ['RESERVED', 'COMPLETED', 'EXPIRED', 'RELEASED']);
 export const WAITLIST_STATUS_ENUM = pgEnum('waitlist_status_enum', ['PENDING', 'NOTIFIED', 'EXPIRED', 'COMPLETED']);
 
@@ -97,10 +98,18 @@ export const teamsTable = pgTable('teams_table',
     riderId: uuid('rider_id').references(() => usersTable.id).notNull(),
     skierId: uuid('skier_id').references(() => usersTable.id).notNull(),
     horseName: varchar('horse_name', { length: 255 }),
-    teamName: varchar('team_name', { length: 255 }),
+    horseOwner: varchar('horse_owner', { length: 255 }),
+    teamNumber: serial('team_number').notNull(),
+    division: DIVISION_ENUM('division'),
     status: STATUS_ENUM('status').notNull().default('PENDING'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
+
+export const systemSettingsTable = pgTable('system_settings_table', {
+  id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+  isRegistrationOpen: boolean('is_registration_open').notNull().default(false),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});

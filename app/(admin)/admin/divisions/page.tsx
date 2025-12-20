@@ -1,16 +1,16 @@
 import { db } from "@/database/drizzle";
-import { usersTable } from "@/database/schema";
+import { teamsTable } from "@/database/schema";
 import { count } from "drizzle-orm";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 
 const DivisionsPage = async () => {
     const divisionCounts = await db.select({
-        division: usersTable.division,
+        division: teamsTable.division,
         count: count()
     })
-    .from(usersTable)
-    .groupBy(usersTable.division);
+    .from(teamsTable)
+    .groupBy(teamsTable.division);
 
     // Ensure all divisions are listed even if count is 0
     const allDivisions = ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD'];

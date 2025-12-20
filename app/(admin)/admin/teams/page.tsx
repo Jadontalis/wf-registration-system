@@ -10,7 +10,7 @@ const TeamsPage = async () => {
 
     const teams = await db.select({
         id: teamsTable.id,
-        teamName: teamsTable.teamName,
+        teamNumber: teamsTable.teamNumber,
         horseName: teamsTable.horseName,
         status: teamsTable.status,
         riderName: rider.full_name,
@@ -26,7 +26,7 @@ const TeamsPage = async () => {
     return (
         <div className="flex flex-col gap-8 flex-1 h-full">
             <h1 className="text-3xl font-bold text-white">Teams</h1>
-            <DataTable columns={columns} data={teams} searchKey="teamName" />
+            <DataTable columns={columns} data={teams} searchKey="teamNumber" />
         </div>
     );
 };

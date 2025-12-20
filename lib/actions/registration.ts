@@ -2,7 +2,7 @@
 
 import { db } from '@/database/drizzle';
 import { registrationSlotsTable, waitlistTable, teamsTable, registrationCartTable, usersTable } from '@/database/schema';
-import { eq, and, gt, count, desc } from 'drizzle-orm';
+import { eq, and, gt, count, desc, ne, or, ilike, inArray } from 'drizzle-orm';
 
 const MAX_SLOTS = 50; // Configurable
 const SLOT_DURATION_MINUTES = 10;
@@ -10,66 +10,8 @@ const SLOT_DURATION_MINUTES = 10;
 import { auth } from "@/auth";
 
 export async function reserveSlot(userId: string) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-        return { success: false, error: "Unauthorized" };
-    }
-
-    if (session.user.id !== userId) {
-        return { success: false, error: "Unauthorized" };
-    }
-
-    // 1. Check if user already has an active slot
-    const existingSlot = await db
-      .select()
-      .from(registrationSlotsTable)
-      .where(
-        and(
-          eq(registrationSlotsTable.userId, userId),
-          eq(registrationSlotsTable.status, 'RESERVED'),
-          gt(registrationSlotsTable.expiresAt, new Date())
-        )
-      )
-      .limit(1);
-
-    if (existingSlot.length > 0) {
-      return { success: true, slot: existingSlot[0], message: 'Existing slot found' };
-    }
-
-    // 2. Check total active slots
-    const activeSlotsCount = await db
-      .select({ count: count() })
-      .from(registrationSlotsTable)
-      .where(
-        and(
-          eq(registrationSlotsTable.status, 'RESERVED'),
-          gt(registrationSlotsTable.expiresAt, new Date())
-        )
-      );
-
-    if (activeSlotsCount[0].count >= MAX_SLOTS) {
-      return { success: false, reason: 'FULL', message: 'Registration slots are full' };
-    }
-
-    // 3. Create new slot
-    const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + SLOT_DURATION_MINUTES);
-
-    const newSlot = await db
-      .insert(registrationSlotsTable)
-      .values({
-        userId,
-        expiresAt,
-        status: 'RESERVED',
-      })
-      .returning();
-
-    return { success: true, slot: newSlot[0] };
-  } catch (error) {
-    console.error('Error reserving slot:', error);
-    return { success: false, error: 'Failed to reserve slot' };
-  }
+  // Deprecated: Slot system removed. Always returns success.
+  return { success: true, slot: { id: 'dummy', expiresAt: new Date(Date.now() + 3600000) } };
 }
 
 export async function joinWaitlist(userId: string) {
@@ -112,81 +54,25 @@ export async function joinWaitlist(userId: string) {
 }
 
 export async function checkSlotStatus(userId: string) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id || session.user.id !== userId) {
-        return { status: 'ERROR' }; // Or handle unauthorized explicitly
-    }
-
-    const slot = await db
-      .select()
-      .from(registrationSlotsTable)
-      .where(
-        and(
-          eq(registrationSlotsTable.userId, userId),
-          eq(registrationSlotsTable.status, 'RESERVED')
-        )
-      )
-      .orderBy(desc(registrationSlotsTable.createdAt))
-      .limit(1);
-
-    if (slot.length === 0) return { status: 'NONE' };
-
-    const currentSlot = slot[0];
-    if (new Date() > currentSlot.expiresAt) {
-      // Expire it
-      await db
-        .update(registrationSlotsTable)
-        .set({ status: 'EXPIRED' })
-        .where(eq(registrationSlotsTable.id, currentSlot.id));
-      return { status: 'EXPIRED' };
-    }
-
-    return { status: 'ACTIVE', expiresAt: currentSlot.expiresAt };
-  } catch (error) {
-    console.error('Error checking slot:', error);
-    return { status: 'ERROR' };
-  }
+  // Deprecated: Slot system removed. Always returns ACTIVE.
+  return { status: 'ACTIVE', expiresAt: new Date(Date.now() + 3600000) };
 }
 
 //may be depreciated soon 
 export async function releaseSlot(userId: string) {
-    try {
-        const session = await auth();
-        if (!session?.user?.id || session.user.id !== userId) {
-            return { success: false, error: "Unauthorized" };
-        }
-    // Mark current active slot as RELEASED
-    try {
-        await db
-            .update(registrationSlotsTable)
-            .set({ status: 'RELEASED' })
-            .where(
-                and(
-                    eq(registrationSlotsTable.userId, userId),
-                    eq(registrationSlotsTable.status, 'RESERVED')
-                )
-            );
-        return { success: true };
-    } catch (error) {
-        console.error('Error releasing slot:', error);
-        return { success: false, error: 'Failed to release slot' };
-    }
-    } catch (error) {
-        return { success: false, error: 'Unauthorized' };
-    }
+    // Deprecated: Slot system removed.
+    return { success: true };
 }
 
 export async function submitRegistrationCart(
   userId: string, 
-  teams: { riderId: string; skierId: string; horseName?: string; teamName?: string }[],
+  teams: { riderId: string; skierId: string; horseName?: string; horseOwner?: string; division?: 'NOVICE' | 'SPORT' | 'OPEN' | 'SNOWBOARD' }[],
   additionalInfo?: {
     guardianName?: string;
     guardianPhone?: string;
-    division?: 'NOVICE' | 'SPORT' | 'OPEN';
     waiverAgreed: boolean;
-    horseOwner?: string;
-    horses?: { name: string; bio: string }[];
+    // horseOwner?: string; // Deprecated in favor of per-team horse owner
+    // horses?: { name: string; bio: string }[]; // Deprecated
   }
 ) {
   try {
@@ -195,11 +81,101 @@ export async function submitRegistrationCart(
         return { success: false, error: "Unauthorized" };
     }
 
-    // 1. Verify slot is still valid
-    const slotStatus = await checkSlotStatus(userId);
-    if (slotStatus.status !== 'ACTIVE') {
-      return { success: false, error: 'Slot expired or invalid' };
+    // Slot check removed
+
+    // --- VALIDATION START ---
+
+    // Helper to get user name for error messages
+    const getUserName = async (id: string) => {
+        const user = await db.select({ name: usersTable.full_name }).from(usersTable).where(eq(usersTable.id, id)).limit(1);
+        return user[0]?.name || 'Unknown User';
+    };
+
+    // 0. Cleanup: Remove any existing PENDING carts for this user to prevent "ghost" limits
+    // This ensures that if a user goes back and resubmits, their previous attempt doesn't block them.
+    const existingPendingCarts = await db
+        .select({ id: registrationCartTable.id })
+        .from(registrationCartTable)
+        .where(and(
+            eq(registrationCartTable.userId, userId),
+            eq(registrationCartTable.status, 'PENDING')
+        ));
+
+    if (existingPendingCarts.length > 0) {
+        const cartIds = existingPendingCarts.map(c => c.id);
+        
+        // Delete teams associated with these carts
+        await db.delete(teamsTable).where(inArray(teamsTable.cartId, cartIds));
+        
+        // Delete the carts themselves
+        await db.delete(registrationCartTable).where(inArray(registrationCartTable.id, cartIds));
     }
+
+    // 1. Validate Horse Limits (Max 2 runs per Horse Name + Owner)
+    // Moved before User Limits to prioritize horse errors
+    const horseCounts = new Map<string, { count: number, name: string, owner: string }>();
+
+    // Count in current cart
+    for (const team of teams) {
+        if (team.horseName && team.horseOwner) {
+            const key = `${team.horseName.trim().toLowerCase()}|${team.horseOwner.trim().toLowerCase()}`;
+            const current = horseCounts.get(key) || { count: 0, name: team.horseName.trim(), owner: team.horseOwner.trim() };
+            horseCounts.set(key, { 
+                count: current.count + 1, 
+                name: current.name, 
+                owner: current.owner 
+            });
+        }
+    }
+
+    // Check against DB
+    for (const [key, data] of horseCounts.entries()) {
+        const [hName, hOwner] = key.split('|');
+        
+        const existingRuns = await db
+            .select({ count: count() })
+            .from(teamsTable)
+            .where(and(
+                ilike(teamsTable.horseName, hName), 
+                ilike(teamsTable.horseOwner, hOwner),
+                ne(teamsTable.status, 'REJECTED')
+            ));
+
+        const totalRuns = Number(existingRuns[0]?.count || 0) + data.count;
+
+        if (totalRuns > 2) {
+            return { success: false, error: `ERROR: Horse "${data.name}" owned by "${data.owner}" has reached the limit of 2 runs. Please select a different horse.` };
+        }
+    }
+
+    // 2. Validate User Limits (Max 7 runs)
+    const userCounts = new Map<string, number>();
+
+    // Count in current cart
+    for (const team of teams) {
+        userCounts.set(team.riderId, (userCounts.get(team.riderId) || 0) + 1);
+        userCounts.set(team.skierId, (userCounts.get(team.skierId) || 0) + 1);
+    }
+
+    // Check against DB for each unique user in the cart
+    for (const [uid, currentCount] of userCounts.entries()) {
+        const existingRuns = await db
+            .select({ count: count() })
+            .from(teamsTable)
+            .where(and(
+                or(eq(teamsTable.riderId, uid), eq(teamsTable.skierId, uid)),
+                ne(teamsTable.status, 'REJECTED')
+            ));
+        
+        const totalRuns = Number(existingRuns[0]?.count || 0) + currentCount;
+        
+        if (totalRuns > 7) {
+            const name = await getUserName(uid);
+            return { success: false, error: `ERROR: ${name} has been selected to run too many times (Max 7). Please review your cart.` };
+        }
+    }
+
+    // --- VALIDATION END ---
 
     // Update user info if provided
     if (additionalInfo) {
@@ -208,9 +184,9 @@ export async function submitRegistrationCart(
             waiver_signed_at: additionalInfo.waiverAgreed ? new Date() : undefined,
             guardian_name: additionalInfo.guardianName,
             guardian_phone: additionalInfo.guardianPhone,
-            division: additionalInfo.division,
-            horse_owner: additionalInfo.horseOwner,
-            horses: additionalInfo.horses,
+            // division: additionalInfo.division, // Removed global division
+            // horse_owner: additionalInfo.horseOwner, // Removed
+            // horses: additionalInfo.horses, // Removed
         }).where(eq(usersTable.id, userId));
     }
 
@@ -228,19 +204,12 @@ export async function submitRegistrationCart(
         cartId,
         riderId: team.riderId,
         skierId: team.skierId,
-        horseName: team.horseName || '', // Handle optional horseName
-        teamName: team.teamName,
-        status: 'PENDING',
+        horseName: team.horseName || '', 
+        horseOwner: team.horseOwner || '',
+        division: team.division,
+        status: 'SUBMITTED',
       });
     }
-
-    // 4. Mark slot as COMPLETED - MOVED TO finalizeRegistration
-    // await db.update(registrationSlotsTable)
-    //   .set({ status: 'COMPLETED' })
-    //   .where(and(
-    //     eq(registrationSlotsTable.userId, userId),
-    //     eq(registrationSlotsTable.status, 'RESERVED')
-    //   ));
 
     return { success: true };
   } catch (error) {
@@ -256,23 +225,39 @@ export async function finalizeRegistration(userId: string) {
         return { success: false, error: "Unauthorized" };
     }
 
-    // 1. Verify slot is still valid
-    const slotStatus = await checkSlotStatus(userId);
-    if (slotStatus.status !== 'ACTIVE') {
-      return { success: false, error: 'Slot expired or invalid' };
-    }
-
-    // 2. Mark slot as COMPLETED
-    await db.update(registrationSlotsTable)
-      .set({ status: 'COMPLETED' })
+    // Update the pending cart to SUBMITTED
+    await db.update(registrationCartTable)
+      .set({ status: 'SUBMITTED', updatedAt: new Date() })
       .where(and(
-        eq(registrationSlotsTable.userId, userId),
-        eq(registrationSlotsTable.status, 'RESERVED')
+        eq(registrationCartTable.userId, userId),
+        eq(registrationCartTable.status, 'PENDING')
       ));
 
     return { success: true };
   } catch (error) {
     console.error('Error finalizing registration:', error);
     return { success: false, error: 'Failed to finalize registration' };
+  }
+}
+
+export async function reopenRegistration(userId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    // Update the SUBMITTED cart back to PENDING
+    await db.update(registrationCartTable)
+      .set({ status: 'PENDING', updatedAt: new Date() })
+      .where(and(
+        eq(registrationCartTable.userId, userId),
+        eq(registrationCartTable.status, 'SUBMITTED')
+      ));
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error reopening registration:', error);
+    return { success: false, error: 'Failed to reopen registration' };
   }
 }

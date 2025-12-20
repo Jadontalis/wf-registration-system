@@ -1,12 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 import RegistrationButton from './RegistrationButton';
+import { db } from '@/database/drizzle';
+import { registrationCartTable, systemSettingsTable } from '@/database/schema';
+import { eq, and } from 'drizzle-orm';
 
 interface RegistrationOverviewProps extends EventData {
     userId?: string;
 }
 
-const RegistrationOverview = ({
+const RegistrationOverview = async ({
     title,
     date,
     location,
@@ -17,6 +20,18 @@ const RegistrationOverview = ({
     userId,
 }: RegistrationOverviewProps) => 
 {
+    let hasSubmittedCart = false;
+    if (userId) {
+        const submittedCart = await db.select().from(registrationCartTable).where(and(
+            eq(registrationCartTable.userId, userId),
+            eq(registrationCartTable.status, 'SUBMITTED')
+        )).limit(1);
+        hasSubmittedCart = submittedCart.length > 0;
+    }
+
+    const settings = await db.select().from(systemSettingsTable).limit(1);
+    const isRegistrationOpen = settings[0]?.isRegistrationOpen ?? false;
+
     return <section className='w-full px-6 py-8 flex flex-col items-center justify-center'>
         <div className="flex flex-1 flex-col gap-6 max-w-4xl items-center text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
@@ -57,7 +72,7 @@ const RegistrationOverview = ({
                     {available_events > 0 && <p> {available_events} spots available</p>}
                 </div>
                 
-                {/* <RegistrationButton userId={userId} /> */}
+                {isRegistrationOpen && <RegistrationButton userId={userId} hasSubmittedCart={hasSubmittedCart} />}
             </div>
         </div>
     </section>

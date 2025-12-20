@@ -4,17 +4,97 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { checkSlotStatus, joinWaitlist } from '@/lib/actions/registration';
-import RegistrationTimer from '@/components/RegistrationTimer';
 import TeamRegistrationForm from '@/components/TeamRegistrationForm';
 import { db } from '@/database/drizzle';
-import { usersTable, registrationSlotsTable } from '@/database/schema';
+import { usersTable, registrationSlotsTable, registrationCartTable, teamsTable } from '@/database/schema';
 import { eq, and } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 
 const RegistrationPage = async () => {
   const session = await auth();
   if (!session?.user?.id) redirect('/sign-in');
 
   const userId = session.user.id;
+
+  // Check for submitted cart
+  const submittedCart = await db.select().from(registrationCartTable).where(and(
+    eq(registrationCartTable.userId, userId),
+    eq(registrationCartTable.status, 'SUBMITTED')
+  )).limit(1);
+
+  if (submittedCart.length > 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-white">Registration Submitted</h1>
+        <p className="mb-4 text-white text-lg">You have already submitted your registration for approval.</p>
+        <p className="mb-8 text-white/70">You can edit your submission from the homepage.</p>
+        <Link href="/">
+          <Button className="bg-white text-black hover:bg-white/90 cursor-pointer">Return to Home</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // Check for pending cart to populate form
+  const pendingCart = await db.select().from(registrationCartTable).where(and(
+    eq(registrationCartTable.userId, userId),
+    eq(registrationCartTable.status, 'PENDING')
+  )).limit(1);
+
+  let initialTeams = undefined;
+
+  if (pendingCart.length > 0) {
+    const cartId = pendingCart[0].id;
+    const rider = alias(usersTable, "rider");
+    const skier = alias(usersTable, "skier");
+
+    const dbTeams = await db.select({
+        id: teamsTable.id,
+        riderId: teamsTable.riderId,
+        skierId: teamsTable.skierId,
+        horseName: teamsTable.horseName,
+        horseOwner: teamsTable.horseOwner,
+        division: teamsTable.division,
+        riderName: rider.full_name,
+        skierName: skier.full_name,
+    })
+    .from(teamsTable)
+    .leftJoin(rider, eq(teamsTable.riderId, rider.id))
+    .leftJoin(skier, eq(teamsTable.skierId, skier.id))
+    .where(eq(teamsTable.cartId, cartId));
+
+    if (dbTeams.length > 0) {
+        initialTeams = dbTeams.map((t, index) => {
+            let selectedRole: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | undefined = undefined;
+            let partnerId = '';
+            let partnerName = '';
+
+            if (t.riderId === userId) {
+                selectedRole = 'RIDER';
+                partnerId = t.skierId;
+                partnerName = t.skierName || '';
+            } else {
+                if (t.division === 'SNOWBOARD') {
+                    selectedRole = 'SNOWBOARDER';
+                } else {
+                    selectedRole = 'SKIER';
+                }
+                partnerId = t.riderId;
+                partnerName = t.riderName || '';
+            }
+
+            return {
+                id: Date.now() + index,
+                partnerId,
+                partnerName,
+                horseName: t.horseName || '',
+                horseOwner: t.horseOwner || '',
+                selectedRole,
+                division: t.division as any,
+            };
+        });
+    }
+  }
 
   // Check for completed registration
   const completedSlot = await db.select().from(registrationSlotsTable).where(and(
@@ -51,13 +131,16 @@ const RegistrationPage = async () => {
             Back to Homepage
           </Button>
         </Link>
-        <RegistrationTimer expiresAt={slotStatus.expiresAt!} />
       </div>
 
       <h1 className="text-3xl font-bold mb-6 text-white text-center">Complete Your Registration</h1>
       
       <div className="w-full">
-        <TeamRegistrationForm userId={userId} userRole={userRole} />
+        <TeamRegistrationForm 
+          userId={userId} 
+          userRole={userRole as any} 
+          initialTeams={initialTeams}
+        />
       </div>
     </div>
   );

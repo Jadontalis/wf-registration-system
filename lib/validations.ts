@@ -13,7 +13,7 @@ export const signupSchema = z.object({
     confirm_password: z.string().min(8, "Password must be at least 8 characters"),
     waiver_signed: z.boolean().refine(val => val === true, "You must sign the waiver to continue"),
     rules_signed: z.boolean().refine(val => val === true, "You must agree to the rules to continue"),
-    competitor_type: z.enum(["RIDER", "SKIER", "SNOWBOARDER", "SKIER_AND_SNOWBOARDER", "RIDER_AND_SKIER_SNOWBOARDER"]),
+    competitor_type: z.enum(["RIDER", "SKIER", "SNOWBOARDER", "SKIER_AND_SNOWBOARDER", "RIDER_SKIER_SNOWBOARDER"]),
 }).refine((data) => data.password === data.confirm_password, {
     message: "Passwords do not match",
     path: ["confirm_password"],
@@ -33,5 +33,5 @@ export const accountUpdateSchema = z.object({
     state: z.string().min(2, "State is required"),
     zip: z.string().min(5, "Zip code is required"),
     bios: z.string().max(1000, "Bio must be less than 1000 characters").optional().or(z.literal('')),
-    competitor_type: z.enum(["RIDER", "SKIER", "SNOWBOARDER", "SKIER_AND_SNOWBOARDER", "RIDER_AND_SKIER_SNOWBOARDER"]),
+    competitor_type: z.enum(["RIDER", "SKIER", "SNOWBOARDER", "SKIER_AND_SNOWBOARDER", "RIDER_SKIER_SNOWBOARDER"]),
 });

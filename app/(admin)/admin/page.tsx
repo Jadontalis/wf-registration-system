@@ -36,11 +36,11 @@ const AdminDashboard = async () => {
 
     // Get division stats
     const divisionCounts = await db.select({
-        division: usersTable.division,
+        division: teamsTable.division,
         count: count()
     })
-    .from(usersTable)
-    .groupBy(usersTable.division);
+    .from(teamsTable)
+    .groupBy(teamsTable.division);
 
     // Process division stats
     const allDivisions = ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD'];

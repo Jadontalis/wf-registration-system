@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS "registration_slots_table" CASCADE;

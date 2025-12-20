@@ -1,0 +1,1 @@
+ALTER TYPE "public"."reg_cart_status_enum" ADD VALUE 'SUBMITTED';

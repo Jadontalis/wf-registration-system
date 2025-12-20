@@ -127,6 +127,76 @@
       "when": 1765927968798,
       "tag": "0017_narrow_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1766203619080,
+      "tag": "0018_add_horse_owner_to_teams",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1766204180637,
+      "tag": "0019_mean_sunset_bain",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1766204213102,
+      "tag": "0020_silly_rocket_racer",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1766205029831,
+      "tag": "0021_lush_the_twelve",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1766206168826,
+      "tag": "0022_dry_ares",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1766207001140,
+      "tag": "0023_add_trgm_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1766207452827,
+      "tag": "0024_little_mandrill",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1766210671824,
+      "tag": "0025_freezing_smiling_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1766250454173,
+      "tag": "0026_sour_boomerang",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1766250976341,
+      "tag": "0027_strong_dagger",
+      "breakpoints": true
     }
   ]
 }

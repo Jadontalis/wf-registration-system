@@ -16,7 +16,7 @@ const SubmitForApprovalButton = ({ userId }: { userId: string }) => {
       const result = await finalizeRegistration(userId);
       if (result.success) {
         toast.success('Registration submitted for approval!');
-        router.push('/account-settings');
+        router.push('/');
       } else {
         toast.error(result.error || 'Failed to submit');
       }

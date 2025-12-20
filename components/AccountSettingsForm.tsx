@@ -39,7 +39,7 @@ interface AccountSettingsFormProps {
     state: string;
     zip: string;
     bios?: string | null;
-    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
+    competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_SKIER_SNOWBOARDER';
   };
 }
 
@@ -220,7 +220,7 @@ const AccountSettingsForm = ({ userId, initialData }: AccountSettingsFormProps) 
                   <SelectItem value="SKIER" className="focus:bg-white/10 focus:text-white cursor-pointer">Skier</SelectItem>
                   <SelectItem value="SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Snowboarder</SelectItem>
                   <SelectItem value="SKIER_AND_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Skier & Snowboarder)</SelectItem>
-                  <SelectItem value="RIDER_AND_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Rider & Skier/Snowboarder)</SelectItem>
+                  <SelectItem value="RIDER_SKIER_SNOWBOARDER" className="focus:bg-white/10 focus:text-white cursor-pointer">Both (Rider & Skier/Snowboarder)</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage className="text-red-400" />

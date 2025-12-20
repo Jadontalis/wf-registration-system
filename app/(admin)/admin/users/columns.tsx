@@ -14,14 +14,14 @@ import { cn } from "@/lib/utils"
 import { DeleteUserButton } from "@/components/admin/DeleteUserButton"
 
 export type User = {
-  id: string
-  full_name: string
-  email: string
-  role: "ADMIN" | "USER"
-  competitor_type: string
-  bios?: string | null
-  address?: string
-  phone?: string
+  id: string;
+  full_name: string;
+  email: string;
+  role: "ADMIN" | "USER";
+  competitor_type: string;
+  bios?: string | null;
+  address?: string;
+  phone?: string;
 }
 
 const RoleCell = ({ row, table }: { row: any, table: any }) => {

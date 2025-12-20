@@ -2,19 +2,38 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { reserveSlot, joinWaitlist } from '@/lib/actions/registration';
+import { reserveSlot, joinWaitlist, reopenRegistration } from '@/lib/actions/registration';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
 interface RegistrationButtonProps {
   userId?: string;
+  hasSubmittedCart?: boolean;
 }
 
-const RegistrationButton = ({ userId }: RegistrationButtonProps) => {
+const RegistrationButton = ({ userId, hasSubmittedCart }: RegistrationButtonProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isFull, setIsFull] = useState(false);
+
+  const handleEditRegistration = async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const result = await reopenRegistration(userId);
+      if (result.success) {
+        toast.success('Registration reopened for editing.');
+        router.push('/registration-cart');
+      } else {
+        toast.error(result.error || 'Failed to reopen registration');
+      }
+    } catch {
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleRegister = async () => {
     if (!userId) {
@@ -22,17 +41,27 @@ const RegistrationButton = ({ userId }: RegistrationButtonProps) => {
       return;
     }
 
+    if (hasSubmittedCart) {
+      handleEditRegistration();
+      return;
+    }
+
     setLoading(true);
     try {
       const result = await reserveSlot(userId);
       if (result.success) {
-        toast.success('Slot reserved! You have 10 minutes to register');
+        toast.success('Your registration has opened.');
         router.push('/registration');
-      } else if (result.reason === 'FULL') {
-        setIsFull(true);
-        toast.error(result.message);
       } else {
-        toast.error(result.error || 'Something went wrong');
+        // @ts-ignore
+        if (result.reason === 'FULL') {
+             setIsFull(true);
+             // @ts-ignore
+             toast.error(result.message);
+        } else {
+             // @ts-ignore
+             toast.error(result.error || 'Something went wrong');
+        }
       }
     } catch {
       toast.error('Failed to begin registration');
@@ -84,7 +113,7 @@ const RegistrationButton = ({ userId }: RegistrationButtonProps) => {
       <div className="flex items-center justify-center gap-2">
         <Image src="/icons/logo.png" alt="Logo" width={24} height={24} />
         <span>
-          {loading ? 'Checking...' : (userId ? 'Register Now' : 'Sign In to Register')}
+          {loading ? 'Processing...' : (userId ? (hasSubmittedCart ? 'Edit Registration' : 'Register Now') : 'Sign In to Register')}
         </span>
       </div>
     </Button>

@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { auth } from "@/auth";
 import { accountUpdateSchema } from "@/lib/validations";
 
-export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER', currentUserId: string) {
+export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_SKIER_SNOWBOARDER', currentUserId: string) {
   if (!query || query.length < 2) return [];
 
   try {
@@ -16,8 +16,8 @@ export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' |
     if (!session?.user?.id) return [];
     
     // Logic:
-    // If searching for RIDER, we want people who are RIDER or RIDER_AND_SKIER_SNOWBOARDER
-    // If searching for SKIER/SNOWBOARDER/BOTH, we want people who are NOT RIDER (so SKIER, SNOWBOARDER, BOTH, or RIDER_AND_SKIER_SNOWBOARDER)
+    // If searching for RIDER, we want people who are RIDER or RIDER_SKIER_SNOWBOARDER
+    // If searching for SKIER/SNOWBOARDER/BOTH, we want people who are NOT RIDER (so SKIER, SNOWBOARDER, BOTH, or RIDER_SKIER_SNOWBOARDER)
     
     const isLookingForRider = type === 'RIDER';
     
@@ -32,10 +32,10 @@ export async function searchCompetitors(query: string, type: 'RIDER' | 'SKIER' |
       .where(
         and(
           isLookingForRider 
-            ? inArray(usersTable.competitor_type, ['RIDER', 'RIDER_AND_SKIER_SNOWBOARDER'])
+            ? inArray(usersTable.competitor_type, ['RIDER', 'RIDER_SKIER_SNOWBOARDER'])
             : ne(usersTable.competitor_type, 'RIDER'), // Look for anyone who is NOT a pure rider
           ne(usersTable.id, session.user.id), // Exclude self
-          ilike(usersTable.full_name, `${query}%`)
+          ilike(usersTable.full_name, `%${query}%`)
         )
       )
       .limit(10);
@@ -56,7 +56,7 @@ export async function updateAccountDetails(userId: string, data: {
   state: string;
   zip: string;
   bios?: string | null;
-  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_AND_SKIER_SNOWBOARDER';
+  competitor_type: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_SKIER_SNOWBOARDER';
 }) {
   try {
     const session = await auth();
