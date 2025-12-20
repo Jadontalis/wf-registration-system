@@ -3,6 +3,7 @@
 import { db } from '@/database/drizzle';
 import { usersTable } from '@/database/schema';
 import { ilike, and, eq, ne, inArray } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
 import { auth } from "@/auth";
 import { accountUpdateSchema } from "@/lib/validations";
@@ -139,5 +140,26 @@ export async function updateUserRoleBulk(updates: { id: string; role: "ADMIN" | 
             console.error("Error stack:", error.stack);
         }
         return { success: false, error: "Failed to update roles" };
+    }
+}
+
+export async function deleteUser(userId: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        // Verify the requester is an admin
+        const requester = await db.select({ role: usersTable.role }).from(usersTable).where(eq(usersTable.id, session.user.id)).limit(1);
+        if (!requester.length || requester[0].role !== "ADMIN") {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        await db.delete(usersTable).where(eq(usersTable.id, userId));
+        
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        return { success: false, error: "Failed to delete user" };
     }
 }

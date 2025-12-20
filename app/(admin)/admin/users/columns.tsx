@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { DeleteUserButton } from "@/components/admin/DeleteUserButton"
 
 export type User = {
   id: string
@@ -101,5 +102,16 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row, table }) => <RoleCell row={row} table={table} />,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original
+      return (
+        <div className="flex justify-end">
+          <DeleteUserButton userId={user.id} userName={user.full_name} />
+        </div>
+      )
+    },
   },
 ]

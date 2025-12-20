@@ -239,7 +239,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white disabled:opacity-50"
+            className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white disabled:opacity-50 cursor-pointer"
           >
             Previous
           </Button>
@@ -248,7 +248,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white disabled:opacity-50"
+            className="bg-black/20 border-white/10 text-white hover:bg-white/10 hover:text-white disabled:opacity-50 cursor-pointer"
           >
             Next
           </Button>

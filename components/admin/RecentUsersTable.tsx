@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteUserButton } from "./DeleteUserButton";
 
 interface RecentUser {
   id: string;
@@ -32,6 +33,7 @@ export const RecentUsersTable = ({ users }: RecentUsersTableProps) => {
             <TableHead className="text-gray-400">Type</TableHead>
             <TableHead className="text-gray-400">Division</TableHead>
             <TableHead className="text-gray-400 text-right">Joined</TableHead>
+            <TableHead className="text-gray-400 text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,6 +45,9 @@ export const RecentUsersTable = ({ users }: RecentUsersTableProps) => {
               <TableCell className="text-gray-300">{user.division || '-'}</TableCell>
               <TableCell className="text-right text-gray-300">
                 {user.created_at ? format(new Date(user.created_at), 'MMM d, yyyy') : '-'}
+              </TableCell>
+              <TableCell className="text-right">
+                <DeleteUserButton userId={user.id} userName={user.full_name} />
               </TableCell>
             </TableRow>
           ))}

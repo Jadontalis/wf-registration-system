@@ -43,7 +43,7 @@ const AdminDashboard = async () => {
     .groupBy(usersTable.division);
 
     // Process division stats
-    const allDivisions = ['NOVICE', 'SPORT', 'OPEN'];
+    const allDivisions = ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD'];
     const divisionStats = allDivisions.map(div => {
         const found = divisionCounts.find(d => d.division === div);
         return {
