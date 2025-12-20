@@ -28,7 +28,7 @@ export const RegistrationToggle = ({ isOpen }: RegistrationToggleProps) => {
             onClick={handleToggle} 
             disabled={isPending}
             variant={isOpen ? "destructive" : "default"}
-            className={`${!isOpen ? "bg-white text-black hover:bg-gray-200" : ""} cursor-pointer`}
+            className={`${!isOpen ? "bg-white text-black hover:bg-gray-200" : "bg-red-600 hover:bg-red-700 text-white"} cursor-pointer`}
         >
             {isOpen ? "Close Registration" : "Open Registration"}
         </Button>
