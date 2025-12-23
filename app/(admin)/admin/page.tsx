@@ -1,6 +1,6 @@
 import { db } from "@/database/drizzle";
 import { usersTable, teamsTable, waitlistTable, registrationCartTable } from "@/database/schema";
-import { count, desc } from "drizzle-orm";
+import { count, desc, sql } from "drizzle-orm";
 import dynamic from 'next/dynamic';
 import { ExpandableChart } from "@/components/admin/charts/ExpandableChart";
 import { RecentUsersTable } from "@/components/admin/RecentUsersTable";
@@ -66,22 +66,15 @@ const AdminDashboard = async () => {
     }));
 
     // Get user growth stats (last 30 days)
-    const allUsers = await db.select({ createdAt: usersTable.created_at }).from(usersTable);
-    
-    // Group by date
-    const growthMap = new Map<string, number>();
-    allUsers.forEach(user => {
-        if (user.createdAt) {
-            const date = user.createdAt.toISOString().split('T')[0];
-            growthMap.set(date, (growthMap.get(date) || 0) + 1);
-        }
-    });
-
-    // Convert to array and sort
-    const growthStats = Array.from(growthMap.entries())
-        .map(([date, count]) => ({ date, count }))
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .slice(-30); // Last 30 days
+    const growthStats = await db
+        .select({
+            date: sql<string>`to_char(${usersTable.created_at}, 'YYYY-MM-DD')`,
+            count: count(),
+        })
+        .from(usersTable)
+        .where(sql`${usersTable.created_at} > NOW() - INTERVAL '30 days'`)
+        .groupBy(sql`to_char(${usersTable.created_at}, 'YYYY-MM-DD')`)
+        .orderBy(sql`to_char(${usersTable.created_at}, 'YYYY-MM-DD')`);
 
     return (
         <div className="flex flex-col gap-8">

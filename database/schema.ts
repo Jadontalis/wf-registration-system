@@ -103,7 +103,11 @@ export const teamsTable = pgTable('teams_table',
     division: DIVISION_ENUM('division'),
     status: STATUS_ENUM('status').notNull().default('PENDING'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+}, (table) => ({
+    riderIdIdx: index('team_rider_id_idx').on(table.riderId),
+    skierIdIdx: index('team_skier_id_idx').on(table.skierId),
+    cartIdIdx: index('team_cart_id_idx').on(table.cartId),
+}));
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;

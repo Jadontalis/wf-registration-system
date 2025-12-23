@@ -217,7 +217,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
   return (
     <div className="space-y-6 w-full">
       <div className={`p-6 border ${borderColor} ${hoverBorderColor} transition-colors duration-50 rounded-lg ${bgColor} backdrop-blur-sm space-y-4 relative`}>
-        <h2 className={`text-xl font-bold text-center ${textColor}`}>Whitefish Skijoring Individual Registration (2026)</h2>
+        <h2 className={`text-xl font-bold text-center ${textColor}`}>Whitefish Skijoring Individual Registration Requests (2026)</h2>
         <p className={`text-sm ${isLightMode ? 'text-black/70' : 'text-white/70'} text-center`}>
           <strong className={textColor}>COMPETITOR Whitefish Skijoring, Whitefish MT WAIVER AND RELEASE FORM</strong>
           <br />

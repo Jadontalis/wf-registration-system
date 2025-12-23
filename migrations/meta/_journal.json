@@ -197,6 +197,13 @@
       "when": 1766250976341,
       "tag": "0027_strong_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1766524604478,
+      "tag": "0028_glorious_malice",
+      "breakpoints": true
     }
   ]
 }

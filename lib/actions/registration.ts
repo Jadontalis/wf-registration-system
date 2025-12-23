@@ -3,6 +3,8 @@
 import { db } from '@/database/drizzle';
 import { registrationSlotsTable, waitlistTable, teamsTable, registrationCartTable, usersTable } from '@/database/schema';
 import { eq, and, gt, count, desc, ne, or, ilike, inArray } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
+import { revalidatePath } from 'next/cache';
 
 const MAX_SLOTS = 50; // Configurable
 const SLOT_DURATION_MINUTES = 10;
@@ -261,3 +263,93 @@ export async function reopenRegistration(userId: string) {
     return { success: false, error: 'Failed to reopen registration' };
   }
 }
+
+export async function getUserTeamRegistrations(userId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const rider = alias(usersTable, "rider");
+    const skier = alias(usersTable, "skier");
+    const creator = alias(usersTable, "creator");
+
+    const registrations = await db
+      .select({
+        teamId: teamsTable.id,
+        teamNumber: teamsTable.teamNumber,
+        division: teamsTable.division,
+        horseName: teamsTable.horseName,
+        horseOwner: teamsTable.horseOwner,
+        status: teamsTable.status,
+        createdAt: teamsTable.createdAt,
+        riderName: rider.full_name,
+        riderId: rider.id,
+        skierName: skier.full_name,
+        skierId: skier.id,
+        creatorName: creator.full_name,
+        creatorId: creator.id,
+        cartStatus: registrationCartTable.status,
+      })
+      .from(teamsTable)
+      .innerJoin(registrationCartTable, eq(teamsTable.cartId, registrationCartTable.id))
+      .innerJoin(rider, eq(teamsTable.riderId, rider.id))
+      .innerJoin(skier, eq(teamsTable.skierId, skier.id))
+      .innerJoin(creator, eq(registrationCartTable.userId, creator.id))
+      .where(
+        or(
+          eq(teamsTable.riderId, userId),
+          eq(teamsTable.skierId, userId)
+        )
+      )
+      .orderBy(desc(teamsTable.createdAt));
+
+    return { success: true, data: registrations };
+  } catch (error) {
+    console.error('Error fetching user registrations:', error);
+    return { success: false, error: 'Failed to fetch registrations' };
+  }
+}
+
+export async function scratchTeam(teamId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const userId = session.user.id;
+
+    // Verify user is part of the team or the creator (via cart)
+    const team = await db
+      .select({
+        id: teamsTable.id,
+        riderId: teamsTable.riderId,
+        skierId: teamsTable.skierId,
+        cartUserId: registrationCartTable.userId,
+      })
+      .from(teamsTable)
+      .innerJoin(registrationCartTable, eq(teamsTable.cartId, registrationCartTable.id))
+      .where(eq(teamsTable.id, teamId))
+      .limit(1);
+
+    if (team.length === 0) {
+      return { success: false, error: "Team not found" };
+    }
+
+    const t = team[0];
+    if (t.riderId !== userId && t.skierId !== userId && t.cartUserId !== userId) {
+      return { success: false, error: "Unauthorized to scratch this team" };
+    }
+
+    await db.delete(teamsTable).where(eq(teamsTable.id, teamId));
+
+    revalidatePath('/account-activity');
+    return { success: true, message: "Team scratched successfully" };
+  } catch (error) {
+    console.error("Error scratching team:", error);
+    return { success: false, error: "Failed to scratch team" };
+  }
+}
+

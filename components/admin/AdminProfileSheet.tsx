@@ -20,14 +20,14 @@ interface AdminProfileSheetProps {
 const AdminProfileSheet = ({ user, open, onOpenChange }: AdminProfileSheetProps) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="bg-[#0a0f1a] border-l border-white/10 text-white overflow-y-auto w-full sm:max-w-xl">
+      <SheetContent className="bg-[#0a0f1a] border-l border-white/10 text-white overflow-y-auto w-full sm:max-w-lg">
         <SheetHeader className="px-8">
           <SheetTitle className="text-white">Account Settings</SheetTitle>
           <SheetDescription className="text-gray-400">
             Update your account details here.
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-6 px-8">
+        <div className="mt-6 px-8 pb-8">
             <AccountSettingsForm userId={user.id} initialData={user} />
         </div>
       </SheetContent>
