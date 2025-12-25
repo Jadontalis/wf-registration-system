@@ -12,11 +12,11 @@ interface UsersTableProps {
 }
 
 export function UsersTable({ data }: UsersTableProps) {
-    const [pendingChanges, setPendingChanges] = useState<Record<string, "ADMIN" | "USER">>({})
+    const [pendingChanges, setPendingChanges] = useState<Record<string, "ADMIN" | "USER" | "INVITEE">>({})
     const [isSaving, startTransition] = useTransition()
     const router = useRouter()
 
-    const updateRole = (userId: string, role: "ADMIN" | "USER") => {
+    const updateRole = (userId: string, role: "ADMIN" | "USER" | "INVITEE") => {
         const originalUser = data.find(u => u.id === userId)
         if (originalUser && originalUser.role === role) {
              const newPending = { ...pendingChanges }

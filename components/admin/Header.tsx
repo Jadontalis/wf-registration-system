@@ -9,7 +9,7 @@ const Header = async () => {
 
     return (
         <>
-            <header className="flex items-center justify-between px-8 py-4 bg-black/20 backdrop-blur-lg border-b border-white/10 text-white">
+            <header className="flex items-center justify-between px-8 py-2 bg-black/20 backdrop-blur-lg border-b border-white/10 text-white">
                 <div className="flex items-center gap-4">
                     <MobileNav />
                     <div className="hidden md:block">

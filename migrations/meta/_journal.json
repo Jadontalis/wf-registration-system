@@ -204,6 +204,20 @@
       "when": 1766524604478,
       "tag": "0028_glorious_malice",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1766609737700,
+      "tag": "0029_oval_juggernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1766610040008,
+      "tag": "0030_third_zarda",
+      "breakpoints": true
     }
   ]
 }

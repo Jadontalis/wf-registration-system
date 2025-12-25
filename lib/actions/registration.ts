@@ -70,8 +70,6 @@ export async function submitRegistrationCart(
   userId: string, 
   teams: { riderId: string; skierId: string; horseName?: string; horseOwner?: string; division?: 'NOVICE' | 'SPORT' | 'OPEN' | 'SNOWBOARD' }[],
   additionalInfo?: {
-    guardianName?: string;
-    guardianPhone?: string;
     waiverAgreed: boolean;
     // horseOwner?: string; // Deprecated in favor of per-team horse owner
     // horses?: { name: string; bio: string }[]; // Deprecated
@@ -184,8 +182,6 @@ export async function submitRegistrationCart(
         await db.update(usersTable).set({
             waiver_signed: additionalInfo.waiverAgreed,
             waiver_signed_at: additionalInfo.waiverAgreed ? new Date() : undefined,
-            guardian_name: additionalInfo.guardianName,
-            guardian_phone: additionalInfo.guardianPhone,
             // division: additionalInfo.division, // Removed global division
             // horse_owner: additionalInfo.horseOwner, // Removed
             // horses: additionalInfo.horses, // Removed

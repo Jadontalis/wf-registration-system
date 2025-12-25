@@ -93,7 +93,7 @@ export async function updateAccountDetails(userId: string, data: {
   }
 }
 
-export async function updateUserRole(userId: string, role: "ADMIN" | "USER") {
+export async function updateUserRole(userId: string, role: "ADMIN" | "USER" | "INVITEE") {
     try {
         const session = await auth();
         if (!session?.user?.id) return { success: false, error: "Unauthorized" };
@@ -113,7 +113,7 @@ export async function updateUserRole(userId: string, role: "ADMIN" | "USER") {
     }
 }
 
-export async function updateUserRoleBulk(updates: { id: string; role: "ADMIN" | "USER" }[]) {
+export async function updateUserRoleBulk(updates: { id: string; role: "ADMIN" | "USER" | "INVITEE" }[]) {
     try {
         const session = await auth();
         if (!session?.user?.id) return { success: false, error: "Unauthorized" };

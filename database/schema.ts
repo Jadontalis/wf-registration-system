@@ -29,7 +29,7 @@ import { sql } from 'drizzle-orm';
 
 //User account status
 export const  STATUS_ENUM= pgEnum('status_enum', ['APPROVED', 'REJECTED', 'PENDING', 'SUBMITTED']);
-export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN']);
+export const ROLE_ENUM= pgEnum('role_enum', ['USER', 'ADMIN', 'INVITEE']);
 export const COMPETITOR_TYPE_ENUM = pgEnum('competitor_type_enum', ['RIDER', 'SKIER', 'SNOWBOARDER', 'SKIER_AND_SNOWBOARDER', 'RIDER_SKIER_SNOWBOARDER']);
 export const DIVISION_ENUM = pgEnum('division_enum', ['NOVICE', 'SPORT', 'OPEN', 'SNOWBOARD']);
 

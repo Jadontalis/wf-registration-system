@@ -1,6 +1,7 @@
 "use client";
 
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useState, useEffect } from "react";
 
 interface UserGrowthChartProps {
   data: {
@@ -10,8 +11,16 @@ interface UserGrowthChartProps {
 }
 
 export const UserGrowthChart = ({ data }: UserGrowthChartProps) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div className="h-full w-full bg-white/5 animate-pulse rounded-xl" />;
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
       <AreaChart data={data}>
         <defs>
           <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">

@@ -19,6 +19,7 @@ interface TeamRegistrationFormProps {
   userRole: 'RIDER' | 'SKIER' | 'SNOWBOARDER' | 'SKIER_AND_SNOWBOARDER' | 'RIDER_SKIER_SNOWBOARDER';
   isLightMode?: boolean;
   initialTeams?: Team[];
+  formTitle?: string;
 }
 
 interface Team {
@@ -38,9 +39,7 @@ interface SearchResult {
   competitorType: string;
 }
 
-import { WAIVER_TEXT } from '@/constants';
-
-const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTeams }: TeamRegistrationFormProps) => {
+const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTeams, formTitle }: TeamRegistrationFormProps) => {
   const router = useRouter();
   const [teams, setTeams] = useState<Team[]>(initialTeams || [{ id: 1, partnerId: '', partnerName: '', horseName: '', horseOwner: '', selectedRole: undefined, division: undefined }]);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -49,9 +48,6 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
   const [searchQuery, setSearchQuery] = useState<{ query: string, teamId: number | null }>({ query: '', teamId: null });
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const [waiverAgreed, setWaiverAgreed] = useState(false);
-  const [guardianName, setGuardianName] = useState('');
-  const [guardianPhone, setGuardianPhone] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load state from localStorage on mount
@@ -62,9 +58,6 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
         const parsed = JSON.parse(savedState);
         // Only use localStorage if we didn't provide initialTeams (DB data takes precedence)
         if (!initialTeams && parsed.teams) setTeams(parsed.teams);
-        if (parsed.waiverAgreed !== undefined) setWaiverAgreed(parsed.waiverAgreed);
-        if (parsed.guardianName) setGuardianName(parsed.guardianName);
-        if (parsed.guardianPhone) setGuardianPhone(parsed.guardianPhone);
       } catch (e) {
         console.error("Failed to load saved form state", e);
       }
@@ -76,13 +69,10 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
   useEffect(() => {
     if (!isLoaded) return; // Don't save initial empty state before loading
     const stateToSave = {
-      teams,
-      waiverAgreed,
-      guardianName,
-      guardianPhone
+      teams
     };
     localStorage.setItem(`registration_form_state_${userId}`, JSON.stringify(stateToSave));
-  }, [teams, waiverAgreed, guardianName, guardianPhone, userId, isLoaded]);
+  }, [teams, userId, isLoaded]);
 
   const textColor = isLightMode ? 'text-black' : 'text-white';
   const borderColor = isLightMode ? 'border-black/20' : 'border-white/20';
@@ -147,10 +137,6 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
 
   const handleSubmit = async () => {
     // Validate
-    if (!waiverAgreed) {
-      toast.error('You must agree to the waiver');
-      return;
-    }
 
     for (const team of teams) {
       const currentRole = team.selectedRole || userRole;
@@ -175,11 +161,9 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
         return;
       }
       
-      if (currentRole === 'RIDER') {
-        if (!team.horseName || !team.horseOwner) {
-          toast.error('Please enter Horse Name and Horse Owner for all teams where you are the Rider');
-          return;
-        }
+      if (!team.horseName || !team.horseOwner) {
+        toast.error('Please enter Horse Name and Horse Owner for all teams');
+        return;
       }
     }
 
@@ -197,9 +181,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
       });
 
       const result = await submitRegistrationCart(userId, formattedTeams, {
-        waiverAgreed,
-        guardianName,
-        guardianPhone,
+        waiverAgreed: true,
       });
       if (result.success) {
         toast.success('Added to cart successfully!');
@@ -216,46 +198,11 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
 
   return (
     <div className="space-y-6 w-full">
-      <div className={`p-6 border ${borderColor} ${hoverBorderColor} transition-colors duration-50 rounded-lg ${bgColor} backdrop-blur-sm space-y-4 relative`}>
-        <h2 className={`text-xl font-bold text-center ${textColor}`}>Whitefish Skijoring Individual Registration Requests (2026)</h2>
-        <p className={`text-sm ${isLightMode ? 'text-black/70' : 'text-white/70'} text-center`}>
-          <strong className={textColor}>COMPETITOR Whitefish Skijoring, Whitefish MT WAIVER AND RELEASE FORM</strong>
-          <br />
-          Please read entire form carefully before signing.
-        </p>
-        
-        <div className={`h-96 overflow-y-auto border ${borderColor} p-4 rounded bg-white text-base whitespace-pre-wrap text-black`}>
-          {WAIVER_TEXT}
+      {formTitle && (
+        <div className={`p-6 border ${borderColor} ${hoverBorderColor} transition-colors duration-50 rounded-lg ${bgColor} backdrop-blur-sm space-y-4 relative`}>
+          <h2 className={`text-xl font-bold text-center ${textColor}`}>{formTitle}</h2>
         </div>
-
-        <div className="flex items-center space-x-2">
-          <Checkbox id="waiver" checked={waiverAgreed} onCheckedChange={(c) => setWaiverAgreed(c as boolean)} className={`${isLightMode ? 'border-black/50 data-[state=checked]:bg-black data-[state=checked]:text-white' : 'border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-black'} cursor-pointer`} />
-          <Label htmlFor="waiver" className={`font-bold ${textColor} cursor-pointer`}>I agree to all of the above *</Label>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-                <Label htmlFor="guardianName" className={textColor}>Guardian Name (if applicable)</Label>
-                <Input 
-                  id="guardianName" 
-                  value={guardianName} 
-                  onChange={(e) => setGuardianName(e.target.value)} 
-                  placeholder="Guardian Name" 
-                  className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
-                />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="guardianPhone" className={textColor}>Guardian Phone Number</Label>
-                <Input 
-                  id="guardianPhone" 
-                  value={guardianPhone} 
-                  onChange={(e) => setGuardianPhone(e.target.value)} 
-                  placeholder="Phone Number" 
-                  className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
-                />
-            </div>
-        </div>
-      </div>
+      )}
 
       {teams.map((team, index) => (
         <div key={team.id} className={`p-6 border ${borderColor} ${hoverBorderColor} transition-colors duration-50 rounded-lg ${bgColor} backdrop-blur-sm space-y-4 relative`}>
@@ -264,7 +211,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
               Team {index + 1} {!team.selectedRole && <span className={`text-sm font-normal ${isLightMode ? 'text-black/60' : 'text-white/60'}`}>(Me: {userRole})</span>}
             </h3>
             {teams.length > 1 && (
-              <Button variant="ghost" size="icon" onClick={() => removeTeam(team.id)} className={`hover:${isLightMode ? 'bg-black/10 text-black hover:text-black/80' : 'bg-white/10 text-white hover:text-white/80'}`}>
+              <Button variant="ghost" size="icon" onClick={() => removeTeam(team.id)} className={`cursor-pointer hover:${isLightMode ? 'bg-black/10 text-black hover:text-black/80' : 'bg-white/10 text-white hover:text-white/80'}`}>
                 <X className="h-4 w-4" />
               </Button>
             )}
@@ -356,29 +303,25 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
               )}
             </div>
 
-            {(team.selectedRole === 'RIDER' || (!team.selectedRole && userRole === 'RIDER')) && (
-              <>
-                <div className="space-y-2">
-                  <Label className={textColor}>Horse Name</Label>
-                  <Input
-                    placeholder="Enter horse name"
-                    value={team.horseName}
-                    onChange={(e) => updateTeam(team.id, 'horseName', e.target.value)}
-                    className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
-                  />
-                </div>
+            <div className="space-y-2">
+              <Label className={textColor}>Horse Name</Label>
+              <Input
+                placeholder="Enter horse name"
+                value={team.horseName}
+                onChange={(e) => updateTeam(team.id, 'horseName', e.target.value)}
+                className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
+              />
+            </div>
 
-                <div className="space-y-2">
-                  <Label className={textColor}>Horse Owner</Label>
-                  <Input
-                    placeholder="Enter horse owner"
-                    value={team.horseOwner}
-                    onChange={(e) => updateTeam(team.id, 'horseOwner', e.target.value)}
-                    className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
-                  />
-                </div>
-              </>
-            )}
+            <div className="space-y-2">
+              <Label className={textColor}>Horse Owner</Label>
+              <Input
+                placeholder="Enter horse owner"
+                value={team.horseOwner}
+                onChange={(e) => updateTeam(team.id, 'horseOwner', e.target.value)}
+                className={`${inputBg} ${borderColor} ${textColor} ${placeholderColor} ${focusBorder} ${focusRing} ${hoverBorderColor} transition-colors`}
+              />
+            </div>
           </div>
         </div>
       ))}

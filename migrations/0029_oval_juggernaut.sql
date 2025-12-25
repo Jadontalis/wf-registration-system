@@ -1,0 +1,1 @@
+ALTER TYPE "public"."role_enum" ADD VALUE 'PRE_REGISTRANT';

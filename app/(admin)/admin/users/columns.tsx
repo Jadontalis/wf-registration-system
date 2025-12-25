@@ -17,7 +17,7 @@ export type User = {
   id: string;
   full_name: string;
   email: string;
-  role: "ADMIN" | "USER";
+  role: "ADMIN" | "USER" | "INVITEE";
   competitor_type: string;
   bios?: string | null;
   address?: string;
@@ -32,7 +32,7 @@ const RoleCell = ({ row, table }: { row: any, table: any }) => {
   const pendingRole = meta?.pendingChanges?.[user.id]
   const currentRole = pendingRole || user.role
 
-  const onRoleChange = (newRole: "ADMIN" | "USER") => {
+  const onRoleChange = (newRole: "ADMIN" | "USER" | "INVITEE") => {
      meta?.updateRole?.(user.id, newRole)
   }
 
@@ -44,6 +44,7 @@ const RoleCell = ({ row, table }: { row: any, table: any }) => {
         <SelectContent className="bg-[#0a0f1a] border-white/10 text-white">
             <SelectItem value="USER" className="focus:bg-white/10 focus:text-white cursor-pointer">USER</SelectItem>
             <SelectItem value="ADMIN" className="focus:bg-white/10 focus:text-white cursor-pointer">ADMIN</SelectItem>
+            <SelectItem value="INVITEE" className="focus:bg-white/10 focus:text-white cursor-pointer">INVITEE</SelectItem>
         </SelectContent>
       </Select>
   )

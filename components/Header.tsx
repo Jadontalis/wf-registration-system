@@ -22,7 +22,7 @@ const Header = ({ session }: {session: Session}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
 
-  return <header className="my-10 w-full flex justify-between items-center gap-5 px-4">
+  return <header className="mt-10 mb-0 w-full flex justify-between items-center gap-5 px-4 pb-0">
     <Link href="/" className="hover:opacity-80 active:opacity-80 transition-opacity">
         <Image src="/icons/logo.png" alt="logo" width={90} height={90} />
     </Link>

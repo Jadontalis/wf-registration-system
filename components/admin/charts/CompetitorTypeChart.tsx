@@ -1,6 +1,7 @@
 "use client";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { useState, useEffect } from "react";
 
 interface CompetitorTypeChartProps {
   data: {
@@ -12,8 +13,16 @@ interface CompetitorTypeChartProps {
 const COLORS = ['#ffffff', '#cccccc', '#999999', '#666666', '#333333'];
 
 export const CompetitorTypeChart = ({ data }: CompetitorTypeChartProps) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div className="h-full w-full bg-white/5 animate-pulse rounded-xl" />;
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
       <PieChart>
         <Pie
           data={data}
