@@ -1,0 +1,1 @@
+ALTER TABLE "registration_cart_table" ADD COLUMN "cart_number" serial NOT NULL;

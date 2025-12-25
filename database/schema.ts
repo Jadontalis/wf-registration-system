@@ -85,6 +85,7 @@ export const waitlistTable = pgTable('waitlist_table', {
 export const registrationCartTable = pgTable('registration_cart_table', 
 {
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
+  cartNumber: serial('cart_number').notNull(),
   userId: uuid('user_id').references(() => usersTable.id).notNull(),
   status: REG_CART_STATUS_ENUM('status').notNull().default('PENDING'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

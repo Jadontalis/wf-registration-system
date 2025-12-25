@@ -40,6 +40,7 @@ const RegistrationStatusPage = async ({ params }: PageProps) => {
         status: teamsTable.status,
         // Cart info
         cartStatus: registrationCartTable.status,
+        cartNumber: registrationCartTable.cartNumber,
         userName: usersTable.full_name,
         userEmail: usersTable.email,
         createdAt: registrationCartTable.createdAt,
@@ -55,6 +56,7 @@ const RegistrationStatusPage = async ({ params }: PageProps) => {
 
     const data = teamsData.map(team => ({
         id: team.cartId,
+        cartNumber: team.cartNumber || 0,
         status: team.status as "APPROVED" | "PENDING" | "REJECTED" | "SUBMITTED",
         userName: team.userName,
         userEmail: team.userEmail,
@@ -68,9 +70,11 @@ const RegistrationStatusPage = async ({ params }: PageProps) => {
         skierName: team.skierName
     }));
 
+    const title = status === 'approved' ? 'Resolved Teams' : `${status} Teams`;
+
     return (
         <div className="flex flex-col gap-8 flex-1 h-full">
-            <h1 className="text-3xl font-bold text-white capitalize">{status} Teams</h1>
+            <h1 className="text-3xl font-bold text-white capitalize">{title}</h1>
             <DataTable columns={columns} data={data} searchKey="userName" />
         </div>
     );

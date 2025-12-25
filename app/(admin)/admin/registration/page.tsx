@@ -25,6 +25,7 @@ const RegistrationPage = async () => {
         status: teamsTable.status,
         // Cart info
         cartStatus: registrationCartTable.status,
+        cartNumber: registrationCartTable.cartNumber,
         userName: usersTable.full_name,
         userEmail: usersTable.email,
         createdAt: registrationCartTable.createdAt,
@@ -39,6 +40,7 @@ const RegistrationPage = async () => {
 
     const data = teamsData.map(team => ({
         id: team.cartId,
+        cartNumber: team.cartNumber || 0,
         status: team.status as "APPROVED" | "PENDING" | "REJECTED" | "SUBMITTED",
         userName: team.userName,
         userEmail: team.userEmail,

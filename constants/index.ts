@@ -14,8 +14,8 @@ export const adminSideBarLinks = [
     route: "/admin/registration",
     text: "Registration",
     subItems: [
-      { text: "Resolved Carts", route: "/admin/registration/approved", icon: "CheckCircle" },
-      { text: "Waitlisted Carts", route: "/admin/registration/waitlisted", icon: "Clock" },
+      { text: "Resolved Teams", route: "/admin/registration/approved", icon: "CheckCircle" },
+      { text: "Waitlisted Teams", route: "/admin/registration/waitlisted", icon: "Clock" },
       // { text: "Denied Carts", route: "/admin/registration/rejected", icon: "XCircle" },
     ]
   },

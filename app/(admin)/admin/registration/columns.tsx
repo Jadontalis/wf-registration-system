@@ -7,6 +7,7 @@ import { RegistrationActions } from "@/components/admin/RegistrationActions";
 
 export type RegistrationRow = {
   id: string;
+  cartNumber: number;
   status: "APPROVED" | "PENDING" | "REJECTED" | "SUBMITTED";
   userName: string | null;
   userEmail: string | null;
@@ -22,9 +23,9 @@ export type RegistrationRow = {
 
 export const columns: ColumnDef<RegistrationRow>[] = [
   {
-    accessorKey: "id",
-    header: "Cart ID",
-    cell: ({ row }) => <div className="text-gray-400 text-xs">{row.getValue("id")}</div>,
+    accessorKey: "cartNumber",
+    header: "Cart #",
+    cell: ({ row }) => <div className="text-white font-mono">{row.getValue("cartNumber")}</div>,
   },
   {
     accessorKey: "userName",
