@@ -20,6 +20,7 @@ interface TeamRegistrationFormProps {
   isLightMode?: boolean;
   initialTeams?: Team[];
   formTitle?: string;
+  existingTeamCount?: number;
 }
 
 interface Team {
@@ -39,7 +40,7 @@ interface SearchResult {
   competitorType: string;
 }
 
-const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTeams, formTitle }: TeamRegistrationFormProps) => {
+const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTeams, formTitle, existingTeamCount = 0 }: TeamRegistrationFormProps) => {
   const router = useRouter();
   const [teams, setTeams] = useState<Team[]>(initialTeams || [{ id: 1, partnerId: '', partnerName: '', horseName: '', horseOwner: '', selectedRole: undefined, division: undefined }]);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -208,7 +209,7 @@ const TeamRegistrationForm = ({ userId, userRole, isLightMode = false, initialTe
         <div key={team.id} className={`p-6 border ${borderColor} ${hoverBorderColor} transition-colors duration-50 rounded-lg ${bgColor} backdrop-blur-sm space-y-4 relative`}>
           <div className="flex justify-between items-center">
             <h3 className={`font-bold ${textColor} text-xl`}>
-              Team {index + 1} {!team.selectedRole && <span className={`text-sm font-normal ${isLightMode ? 'text-black/60' : 'text-white/60'}`}>(Me: {userRole})</span>}
+              Team {index + 1 + existingTeamCount} {!team.selectedRole && <span className={`text-sm font-normal ${isLightMode ? 'text-black/60' : 'text-white/60'}`}>(Me: {userRole})</span>}
             </h3>
             {teams.length > 1 && (
               <Button variant="ghost" size="icon" onClick={() => removeTeam(team.id)} className={`cursor-pointer hover:${isLightMode ? 'bg-black/10 text-black hover:text-black/80' : 'bg-white/10 text-white hover:text-white/80'}`}>

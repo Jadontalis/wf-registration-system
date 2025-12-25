@@ -7,7 +7,7 @@ import { checkSlotStatus, joinWaitlist } from '@/lib/actions/registration';
 import TeamRegistrationForm from '@/components/TeamRegistrationForm';
 import { db } from '@/database/drizzle';
 import { usersTable, registrationSlotsTable, registrationCartTable, teamsTable } from '@/database/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, ne, or, count } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 
 const PreRegistrationPage = async () => {
@@ -53,6 +53,17 @@ const PreRegistrationPage = async () => {
     eq(registrationCartTable.userId, userId),
     eq(registrationCartTable.status, 'PENDING')
   )).limit(1);
+
+  // Calculate existing teams count (excluding current pending cart)
+  const existingTeamsResult = await db.select({ count: count() })
+    .from(teamsTable)
+    .where(and(
+        or(eq(teamsTable.riderId, userId), eq(teamsTable.skierId, userId)),
+        ne(teamsTable.status, 'REJECTED'),
+        pendingCart.length > 0 ? ne(teamsTable.cartId, pendingCart[0].id) : undefined
+    ));
+  
+  const existingTeamCount = existingTeamsResult[0]?.count || 0;
 
   let initialTeams = undefined;
 
@@ -153,6 +164,7 @@ const PreRegistrationPage = async () => {
           userId={userId} 
           userRole={userRole as any} 
           initialTeams={initialTeams}
+          existingTeamCount={existingTeamCount}
         />
       </div>
     </div>
