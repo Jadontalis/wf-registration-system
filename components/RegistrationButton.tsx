@@ -10,9 +10,10 @@ import Image from 'next/image';
 interface RegistrationButtonProps {
   userId?: string;
   hasSubmittedCart?: boolean;
+  isInvitee?: boolean;
 }
 
-const RegistrationButton = ({ userId, hasSubmittedCart }: RegistrationButtonProps) => {
+const RegistrationButton = ({ userId, hasSubmittedCart, isInvitee }: RegistrationButtonProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isFull, setIsFull] = useState(false);
@@ -38,6 +39,28 @@ const RegistrationButton = ({ userId, hasSubmittedCart }: RegistrationButtonProp
   const handleRegister = async () => {
     if (!userId) {
       router.push('/sign-in');
+      return;
+    }
+
+    if (isInvitee) {
+      if (hasSubmittedCart) {
+        setLoading(true);
+        try {
+          const result = await reopenRegistration(userId);
+          if (result.success) {
+            toast.success('Registration reopened for editing.');
+            router.push('/pre-registration');
+          } else {
+            toast.error(result.error || 'Failed to reopen registration');
+          }
+        } catch {
+          toast.error('An error occurred');
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+      router.push('/pre-registration');
       return;
     }
 

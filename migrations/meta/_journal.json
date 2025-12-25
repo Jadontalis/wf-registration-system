@@ -225,6 +225,20 @@
       "when": 1766622487344,
       "tag": "0031_tiresome_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1766627870695,
+      "tag": "0032_blushing_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1766627988275,
+      "tag": "0033_complete_zemo",
+      "breakpoints": true
     }
   ]
 }

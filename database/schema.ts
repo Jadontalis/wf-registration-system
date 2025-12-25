@@ -61,6 +61,7 @@ export const usersTable = pgTable('users_table',
   horses: jsonb('horses'),
   role: ROLE_ENUM('role').notNull().default('USER'),
   last_activity_date: date('last_activity_date').notNull().defaultNow(),
+  has_seen_welcome_msg: boolean('has_seen_welcome_msg').notNull().default(false),
   created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
